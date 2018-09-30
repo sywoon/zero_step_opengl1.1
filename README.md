@@ -1,1 +1,4 @@
-# zero_step_opengl1.1
+# 零起步之opengl1.1
+学习过程中的记录和心得。
+
+
