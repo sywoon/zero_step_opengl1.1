@@ -15,7 +15,7 @@
 #include "Log.h"
 
 static char _pszFile[512] = "output.log";
-static bool _autoRtn = true;  //×Ô¶¯»»ĞĞ
+static bool _autoRtn = true;  //è‡ªåŠ¨æ¢è¡Œ
 
 
 HANDLE _CreateMyFile(const char* pszFile)
@@ -35,15 +35,15 @@ HANDLE _CreateMyFile(const char* pszFile)
 	return hFile;
 }
 
-void Log(const char* pszFmt, ...)
+void Log(char* pszFmt, ...)
 {
 	va_list args;
 	va_start(args, pszFmt);
 
     //vc6 not support
-    const int extLen = _autoRtn ? 2 : 1;  //¶îÍâÔö¼Ó \n + \0
+    const int extLen = _autoRtn ? 2 : 1;  //é¢å¤–å¢åŠ  \n + \0
 	int len = vsnprintf(0, 0, pszFmt, args) + extLen;
-	char* pszBuf = (char*)_alloca(len * sizeof(char));//Õ»ÖĞ·ÖÅä, ²»ĞèÒªÊÍ·Å
+	char* pszBuf = (char*)_alloca(len * sizeof(char));//æ ˆä¸­åˆ†é…, ä¸éœ€è¦é‡Šæ”¾
 
 	vsnprintf(pszBuf, len, pszFmt, args);
 	va_end(args);
@@ -66,7 +66,7 @@ void Log(const char* pszFmt, ...)
 	if (bRet)
 	{
 		FlushFileBuffers(hFile);
-		printf("%s", pszBuf);
+		printf(pszBuf);
 		if (_autoRtn)
 		{
 			printf("\n");
@@ -78,20 +78,14 @@ void Log(const char* pszFmt, ...)
 
 void InitLogFile(const char* pszPath, const char* pszFile)
 {
-	if (NULL == pszPath)  //Ã»Â·¾¶ºÍÎÄ¼şÃû Ä¬ÈÏ¸ùÄ¿Â¼ÏÂ
+	if (NULL == pszPath)  //æ²¡è·¯å¾„å’Œæ–‡ä»¶å é»˜è®¤æ ¹ç›®å½•ä¸‹
 	{
 		time_t ltime;
 		time(&ltime);
 		
-		struct tm curTime; 
-		localtime_s(&curTime, &ltime); 
-		//tm* curTime = localtime(&ltime);
-		
-		//.tm_wday Ò»ÄêÖĞµÚ¼¸ÖÜ
-		//.tm_hour .tm_min .tm_sec
-		//.tm_isdst ÏÄÁîÊ±?
-		sprintf_s(_pszFile, sizeof(_pszFile), "%u_%u_%u.log",
-			curTime.tm_year + 1900, curTime.tm_mon + 1, curTime.tm_mday);
+		tm* curTime = localtime(&ltime);
+		sprintf(_pszFile, "%u_%u_%u.log",
+			curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
 		return;
 	}
 
@@ -104,18 +98,16 @@ void InitLogFile(const char* pszPath, const char* pszFile)
 	ZeroMemory(_pszFile, 512);
 	if (pszFile)
 	{
-		sprintf_s(_pszFile, sizeof(_pszFile), "%s/%s", pszPath, pszFile);
+		sprintf(_pszFile, "%s/%s", pszPath, pszFile);
 		return;
 	}
 
 	time_t ltime;
 	time(&ltime);
 	
-	struct tm curTime; 
-	localtime_s(&curTime, &ltime);
-	//tm* curTime = localtime(&ltime);
-	sprintf_s(_pszFile, sizeof(_pszFile), "%s/%u_%u_%u.log", pszPath,
-		curTime.tm_year + 1900, curTime.tm_mon + 1, curTime.tm_mday);
+	tm* curTime = localtime(&ltime);
+	sprintf(_pszFile, "%s/%u_%u_%u.log", pszPath,
+		curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
 }
 
 void SetAutoReturn(const bool value)
@@ -144,7 +136,7 @@ bool MkDir(const char* pszPath)
 #endif
 }
 
-//Ä©Î²²»ÄÜ´ø'/'
+//æœ«å°¾ä¸èƒ½å¸¦'/'
 bool DirExist(const char* pszPath)
 {
 	struct stat s;

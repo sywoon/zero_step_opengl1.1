@@ -1,6 +1,6 @@
 #pragma once 
 
-void Log(const char* pszFmt, ...);
+void Log(char* pszFmt, ...);
 
 void InitLogFile(const char* pszPath = NULL, const char* pszFile = NULL);
 void SetAutoReturn(const bool value);

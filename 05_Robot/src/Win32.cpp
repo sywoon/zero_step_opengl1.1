@@ -222,7 +222,7 @@ HWND CWin32::CreateMyWindow(LPVOID lpParam)
 	{
 		_isLooping = false;
 		char szError[255] = {0};
-		sprintf(szError, "窗口创建失败:%d!", (int)GetLastError());
+		sprintf(szError, "窗口创建失败:%d!", GetLastError());
 		MessageBox(HWND_DESKTOP, szError, "Error", MB_OK | MB_ICONEXCLAMATION);
 		return NULL;
 	}

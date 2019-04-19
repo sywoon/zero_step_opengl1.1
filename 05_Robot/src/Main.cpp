@@ -22,8 +22,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 #ifdef USE_WIN32_CONSOLE
     AllocConsole();
-
-    //freopen废弃用 用freopen_s 或 /D _CRT_SECURE_NO_WARNINGS
     freopen("CONIN$", "r", stdin);
     freopen("CONOUT$", "w", stdout);
     freopen("CONOUT$", "w", stderr);
