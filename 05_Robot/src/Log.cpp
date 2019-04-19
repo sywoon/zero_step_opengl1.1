@@ -35,7 +35,7 @@ HANDLE _CreateMyFile(const char* pszFile)
 	return hFile;
 }
 
-void Log(char* pszFmt, ...)
+void Log(const char* pszFmt, ...)
 {
 	va_list args;
 	va_start(args, pszFmt);
@@ -66,7 +66,7 @@ void Log(char* pszFmt, ...)
 	if (bRet)
 	{
 		FlushFileBuffers(hFile);
-		printf(pszBuf);
+		printf("%s", pszBuf);
 		if (_autoRtn)
 		{
 			printf("\n");
@@ -83,9 +83,15 @@ void InitLogFile(const char* pszPath, const char* pszFile)
 		time_t ltime;
 		time(&ltime);
 		
-		tm* curTime = localtime(&ltime);
-		sprintf(_pszFile, "%u_%u_%u.log",
-			curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
+		struct tm curTime; 
+		localtime_s(&curTime, &ltime); 
+		//tm* curTime = localtime(&ltime);
+		
+		//.tm_wday 一年中第几周
+		//.tm_hour .tm_min .tm_sec
+		//.tm_isdst 夏令时?
+		sprintf_s(_pszFile, sizeof(_pszFile), "%u_%u_%u.log",
+			curTime.tm_year + 1900, curTime.tm_mon + 1, curTime.tm_mday);
 		return;
 	}
 
@@ -98,16 +104,18 @@ void InitLogFile(const char* pszPath, const char* pszFile)
 	ZeroMemory(_pszFile, 512);
 	if (pszFile)
 	{
-		sprintf(_pszFile, "%s/%s", pszPath, pszFile);
+		sprintf_s(_pszFile, sizeof(_pszFile), "%s/%s", pszPath, pszFile);
 		return;
 	}
 
 	time_t ltime;
 	time(&ltime);
 	
-	tm* curTime = localtime(&ltime);
-	sprintf(_pszFile, "%s/%u_%u_%u.log", pszPath,
-		curTime->tm_year + 1900, curTime->tm_mon + 1, curTime->tm_mday);
+	struct tm curTime; 
+	localtime_s(&curTime, &ltime);
+	//tm* curTime = localtime(&ltime);
+	sprintf_s(_pszFile, sizeof(_pszFile), "%s/%u_%u_%u.log", pszPath,
+		curTime.tm_year + 1900, curTime.tm_mon + 1, curTime.tm_mday);
 }
 
 void SetAutoReturn(const bool value)
