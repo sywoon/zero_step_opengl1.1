@@ -37,7 +37,6 @@ void CApplication::Destroy()
 
 
 
-
 AppDelegate::AppDelegate()
 	: CApplication()
 {

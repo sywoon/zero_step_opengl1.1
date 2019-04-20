@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <malloc.h>
 #include <sys/stat.h>
+#include "Charset.h"
 
 
 #ifdef WIN32
@@ -15,7 +16,7 @@
 #include "Log.h"
 
 static char _pszFile[512] = "output.log";
-static bool _autoRtn = true;  //�Զ�����
+static bool _autoRtn = true;  //自动换行
 
 
 HANDLE _CreateMyFile(const char* pszFile)
@@ -41,9 +42,9 @@ void Log(const char* pszFmt, ...)
 	va_start(args, pszFmt);
 
     //vc6 not support
-    const int extLen = _autoRtn ? 2 : 1;  //�������� \n + \0
+    const int extLen = _autoRtn ? 2 : 1;  //额外增加 \n + \0
 	int len = vsnprintf(0, 0, pszFmt, args) + extLen;
-	char* pszBuf = (char*)_alloca(len * sizeof(char));//ջ�з���, ����Ҫ�ͷ�
+	char* pszBuf = (char*)_alloca(len * sizeof(char));//栈中分配, 不需要释放
 
 	vsnprintf(pszBuf, len, pszFmt, args);
 	va_end(args);
@@ -66,7 +67,24 @@ void Log(const char* pszFmt, ...)
 	if (bRet)
 	{
 		FlushFileBuffers(hFile);
+
+		//由于cl和clang对utf-8源码处理方式不同
+		//cl /source-charset:utf-8 会自动将源码中的字符串转为ansi
+		//clang 默认就支持utf-8源码
+		//解决了控制台和log文件输出中文问题，但是log文件的格式会有不同
+		//  cl的log文件是ansi  clang的log文件是utf-8
+#ifdef COMPILE_CL
 		printf("%s", pszBuf);
+#else
+		char* pszAnsi = NULL;
+		if (utf82ansi(pszBuf, &pszAnsi))
+		{
+			printf("%s", pszAnsi);
+			free(pszAnsi);
+		} else {
+			printf("%s", pszBuf);
+		}
+#endif
 		if (_autoRtn)
 		{
 			printf("\n");
@@ -78,7 +96,7 @@ void Log(const char* pszFmt, ...)
 
 void InitLogFile(const char* pszPath, const char* pszFile)
 {
-	if (NULL == pszPath)  //û·�����ļ��� Ĭ�ϸ�Ŀ¼��
+	if (NULL == pszPath)  //没路径和文件名 默认根目录下
 	{
 		time_t ltime;
 		time(&ltime);
@@ -87,9 +105,9 @@ void InitLogFile(const char* pszPath, const char* pszFile)
 		localtime_s(&curTime, &ltime); 
 		//tm* curTime = localtime(&ltime);
 		
-		//.tm_wday һ���еڼ���
+		//.tm_wday 一年中第几周
 		//.tm_hour .tm_min .tm_sec
-		//.tm_isdst ����ʱ?
+		//.tm_isdst 夏令时?
 		sprintf_s(_pszFile, sizeof(_pszFile), "%u_%u_%u.log",
 			curTime.tm_year + 1900, curTime.tm_mon + 1, curTime.tm_mday);
 		return;
@@ -144,7 +162,7 @@ bool MkDir(const char* pszPath)
 #endif
 }
 
-//ĩβ���ܴ�'/'
+//末尾不能带'/'
 bool DirExist(const char* pszPath)
 {
 	struct stat s;

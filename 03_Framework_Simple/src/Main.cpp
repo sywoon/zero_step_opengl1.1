@@ -34,6 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//InitLogFile("Log", "output.log");
 	//ClearLog();
 	Log("=========start===========");
+	Log("游戏中文测试 utf-8");
 	
 	CApplication* app = CApplication::Create();
 	app->Run();
