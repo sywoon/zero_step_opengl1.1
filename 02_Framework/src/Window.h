@@ -15,47 +15,47 @@ public:
 	bool	Create(const char * window_title, const char * class_name, HINSTANCE h_instance, LPVOID lpParam);
 	void	Destroy();
 	bool	ChangeScreenSetting();
-	void	ReshapeGL();   //µ±´°¿Ú´óĞ¡¸Ä±äÊ±£¬Í¨ÖªOpenGLµ÷Õû´óĞ¡
+	void	ReshapeGL();   //å½“çª—å£å¤§å°æ”¹å˜æ—¶ï¼Œé€šçŸ¥OpenGLè°ƒæ•´å¤§å°
 	void	SwapBuffers() { ::SwapBuffers(m_hDC); }
 
-	/** ÉèÖÃ´°¿Ú×óÉÏ½ÇµÄÎ»ÖÃ */
+	/** è®¾ç½®çª—å£å·¦ä¸Šè§’çš„ä½ç½® */
 	void	SetPosX(int x);
 	void	SetPosX(unsigned short x) { SetPosX((signed short)x); }		
 	void	SetPosY(int y);
 	void	SetPosY(unsigned short y) { SetPosY((signed short)y); }		
-	/** ·µ»Ø´°¿Ú×óÉÏ½ÇµÄÎ»ÖÃ */
+	/** è¿”å›çª—å£å·¦ä¸Šè§’çš„ä½ç½® */
 	int		GetPosX();
 	int		GetPosY();
 
-	/** ·µ»Ø´°¿ÚµÄ´óĞ¡ */
+	/** è¿”å›çª—å£çš„å¤§å° */
 	int		GetWidth();
 	int		GetHeight();
-	/** ÉèÖÃ´°¿ÚµÄ´óĞ¡ */
+	/** è®¾ç½®çª—å£çš„å¤§å° */
 	void	SetWidth(int width);
 	void	SetHeight(int height);
 
-	/** ÉèÖÃ´°¿ÚµÄÑÕÉ«Î»Éî */
+	/** è®¾ç½®çª—å£çš„é¢œè‰²ä½æ·± */
 	void	SetHiColor()	{ m_bitsPerPixel = 16; }
 	void	SetTrueColor()	{ m_bitsPerPixel = 32; }
 	void	SetFullScreen(bool mode)	{ m_isFullScreen = mode; }
 	bool	GetFullScreen()	{ return m_isFullScreen; }
 
-	/** ÖØÔØÔËËã·û£¬¿ÉÒÔÈÃWindow m_windowÉùÃ÷ºóµÄm_window×÷Îª´°¿Ú¾ä±úÊ¹ÓÃ */
+	/** é‡è½½è¿ç®—ç¬¦ï¼Œå¯ä»¥è®©Window m_windowå£°æ˜åçš„m_windowä½œä¸ºçª—å£å¥æŸ„ä½¿ç”¨ */
 	operator HWND() { return m_hWnd; }
 
 private:
-	HWND	m_hWnd;							/**< ´°¿Ú¾ä±ú */
-	HDC		m_hDC;							/**< Éè±¸ÃèÊö±í */
-	HGLRC	m_hRC;							/**< OpenGLäÖÈ¾ÃèÊö±í */
+	HWND	m_hWnd;							/**< çª—å£å¥æŸ„ */
+	HDC		m_hDC;							/**< è®¾å¤‡æè¿°è¡¨ */
+	HGLRC	m_hRC;							/**< OpenGLæ¸²æŸ“æè¿°è¡¨ */
 
-	int		m_windowPosX;					/**< ´°¿ÚµÄ×óÉÏ½ÇµÄXÎ»ÖÃ */
-	int		m_windowPosY;					/**< ´°¿ÚµÄ×óÉÏ½ÇµÄYÎ»ÖÃ */
-	int		m_windowWidth;					/**< ´°¿ÚµÄ¿í¶È */
-	int		m_windowHeight;					/**< ´°¿ÚµÄ¸ß¶È */
-	int		m_screenWidth;					/**< È«ÆÁµÄ¿í¶È */
-	int		m_screenHeight;					/**< È«ÆÁµÄ¸ß¶È */
-	int		m_bitsPerPixel;					/**< ÑÕÉ«Î»Éî */
-	bool	m_isFullScreen;					/**< ÊÇ·ñÈ«ÆÁ */
+	int		m_windowPosX;					/**< çª—å£çš„å·¦ä¸Šè§’çš„Xä½ç½® */
+	int		m_windowPosY;					/**< çª—å£çš„å·¦ä¸Šè§’çš„Yä½ç½® */
+	int		m_windowWidth;					/**< çª—å£çš„å®½åº¦ */
+	int		m_windowHeight;					/**< çª—å£çš„é«˜åº¦ */
+	int		m_screenWidth;					/**< å…¨å±çš„å®½åº¦ */
+	int		m_screenHeight;					/**< å…¨å±çš„é«˜åº¦ */
+	int		m_bitsPerPixel;					/**< é¢œè‰²ä½æ·± */
+	bool	m_isFullScreen;					/**< æ˜¯å¦å…¨å± */
 };
 
 #endif	// __GLWINDOW_H__

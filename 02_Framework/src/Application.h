@@ -15,7 +15,7 @@ public:
 
 private:
 	static const unsigned int MAX_KEYS = 256;
-	bool m_keyDown[MAX_KEYS];  //±£´æ256¸ö°´¼üµÄ×´Ì¬
+	bool m_keyDown[MAX_KEYS];  //ä¿å­˜256ä¸ªæŒ‰é”®çš„çŠ¶æ€
 };
 
 
@@ -34,7 +34,7 @@ protected:
 	void ToggleFullScreen();
 	void TerminateApplication();
 
-	//ÉèÖÃÔÚ´°¿Ú¸Ä±ä´óĞ¡µÄÊ±ºò£¬¿ÉÒÔ»æÖÆ
+	//è®¾ç½®åœ¨çª—å£æ”¹å˜å¤§å°çš„æ—¶å€™ï¼Œå¯ä»¥ç»˜åˆ¶
 	void ResizeDraw(bool enable) { m_resizeDraw = enable; };
 
 	Application(const char* pszClassName);
@@ -52,13 +52,13 @@ private:
 	LRESULT Message(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	//×Ô¶¨ÒåÏûÏ¢£¬ÔÚÇĞ»»´°¿ÚÄ£Ê½µÄÊ±ºò·¢ËÍ
+	//è‡ªå®šä¹‰æ¶ˆæ¯ï¼Œåœ¨åˆ‡æ¢çª—å£æ¨¡å¼çš„æ—¶å€™å‘é€
 	static const UINT WM_TOGGLE_FULLSCREEN = (WM_USER + 1);
 	Window m_window;
 	const char* m_pszClassName;
 	bool m_isLooping;
 	bool m_isVisible;
-	bool m_resizeDraw;  //ÊÇ·ñÔÚ¸Ä±ä´óĞ¡Ê±£¬µ÷ÓÃÁË»æÖÆº¯Êı
+	bool m_resizeDraw;  //æ˜¯å¦åœ¨æ”¹å˜å¤§å°æ—¶ï¼Œè°ƒç”¨äº†ç»˜åˆ¶å‡½æ•°
 	DWORD m_dwLastTickCount;
 };
 

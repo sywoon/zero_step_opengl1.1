@@ -52,7 +52,7 @@ END
 // Bitmap
 //
 
-IDB_BAKBITMAP           BITMAP                  "bak.bmp"
+IDB_BAKBITMAP           BITMAP                  "../res/bak.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

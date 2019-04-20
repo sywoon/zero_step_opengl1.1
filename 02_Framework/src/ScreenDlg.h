@@ -3,7 +3,7 @@
 
 #include "Window.h"
 
-/** 定义模式选择对话框类 */
+/** 瀹氫箟妯″紡閫夋嫨瀵硅瘽妗嗙被 */
 class ScreenDlg
 {
 public:

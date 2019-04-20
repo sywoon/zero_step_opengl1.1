@@ -59,7 +59,7 @@ void AppDelegate::Update(DWORD milliseconds)
 
 void AppDelegate::Draw()
 {
-	//用户自定义的绘制过程
+	//鐢ㄦ埛鑷畾涔夌殑缁樺埗杩囩▼
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -6.0f);
@@ -67,7 +67,7 @@ void AppDelegate::Draw()
 	glRotatef(m_fAngle * 0.7f, -1.0f, 0.0f, 0.0f);
 
 
-	for (int rot1 = 0; rot1 < 2; rot1++)  //绘制四个交错的三角形（想的很巧妙啊）
+	for (int rot1 = 0; rot1 < 2; rot1++)  //缁樺埗鍥涗釜浜ら敊鐨勪笁瑙掑舰锛堟兂鐨勫緢宸у鍟婏級
 	{
 		glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 		glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
@@ -81,7 +81,7 @@ void AppDelegate::Draw()
 			glEnd();
 		}
 	}
-	glFlush();    //强制执行所有的OpenGL命令
+	glFlush();    //寮哄埗鎵ц鎵�鏈夌殑OpenGL鍛戒护
 }
 
 
