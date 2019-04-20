@@ -849,7 +849,7 @@ glEnable glDisable 控制某个状态
 ```
 
 * 不同材质球的表现
-	![img](https://github.com/sywoon/zero_step_opengl1.1/doc/07_Material.png)
+	![img](https://github.com/sywoon/zero_step_opengl1.1/blob/master/doc/07_Material.png)
 ```
   1 仅有漫反射光而无环境光和镜面光
       比较暗 边缘渐黑
