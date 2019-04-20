@@ -105,7 +105,7 @@
 ```
 
 
-# 3D图形处理流程
+## 3D图形处理流程
 坐标转换：
 ```
 世界坐标系下的三维物体 => 三维几何变换(平移 缩放 旋转) =>
@@ -244,7 +244,7 @@ P' = P x T(s)
 ```
 
 
-# 投影
+## 投影
 * 正交投影(平行投影)  舍弃了深度信息
 ```
 x' = x
@@ -313,7 +313,7 @@ z' = 0
 
 
 
-# 裁剪
+## 裁剪
 6个面组成的观察体 z方向深度有限 根据投影方式不同分为：
 * 立方体
 * 菱台
@@ -806,7 +806,48 @@ glEnable glDisable 控制某个状态
 
 * 材质的定义
 ```
+  void glMaterial{if}[v](GLenum face, GLenum pname, TYPE param)
+    face: GL_FRONT 正面  GL_BACK 背面  GL_FRONT_AND_BACK 双面
+	pname: 哪种材质属性
+	param: 属性值
+
+  材质属性：
+    pname        默认值                 描述
+  GL_AMBIENT    (0.2, 0.2, 1.0)       材质的环境颜色
+  GL_DIFFUSE    (0.8, 0.8, 0.8, 1.0)  材质的散射颜色
+  GL_AMBIENT_AND_DIFFUSE              材质的环境颜色和散射颜色
+  GL_SPECULAR   (0.0, 0.0, 0.0, 1.0)  材质的镜面反射颜色
+  GL_SHININESS   0.0                  镜面反射指数
+  GL_EMISSION   (0.0, 0.0, 0.0, 1.0)  材质的发射光颜色
+  GL_COLOR_INDEXES (0,1,1)            环境、散射和镜面颜色索引
+
+  现实中物体的散射颜色和环境颜色通常相同，
+  可以用GL_AMBIENT_AND_DIFFUSE 将两者设置相同
+
+  镜面反射将导致物体出现高亮区域，反射强度取决于视点位置，
+  反射角方向上最亮。
+  GL_SHININESS控制高亮区域大小和亮度  [0.0, 128.0]  
+  越大：范围越小 亮度越大
+  GL_EMISSION 可以设置为灯的颜色 表示灯本身
 ```
+
+* 颜色材质模式
+```
+  void glColorMaterial(GLenum face, GLenum mode)
+    face:同上
+	mode: GL_AMBIENT GL_DIFFUSE GL_SPECULAR GL_AMBIENT_AND_DIFFUSE GL_EMISSION
+	将表面face的材质属性mode 设置为当前颜色 由glColor*()指定
+
+	glColorMaterial(GL_FRONT, GL_DIFFUSE)  //使环境材质颜色追踪当前色
+	glEnable(GL_COLOR_MATERIAL)  // 启用材质颜色追踪当前颜色
+
+	使用场合：
+	    需要改变场景中单个材质
+		不需要时 记得关闭 避免开销
+
+    若需要改变多个材质参数 还是通过glMaterial*更合适
+```
+
 
 
 

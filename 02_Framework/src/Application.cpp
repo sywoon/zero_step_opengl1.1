@@ -8,6 +8,19 @@
 #include <glu.h>
 
 
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "glaux.lib")
+
+//无法解析的外部符号 __imp__RegCloseKey@4
+#pragma comment (lib, "Advapi32.lib")
+
+//无法解析的外部符号 _sscanf
+// vs2015默认编译时将许多标准库采用内联方式处理
+#pragma comment (lib, "legacy_stdio_definitions.lib")
+
+
+
 #define USE_WIN32_CONSOLE
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
