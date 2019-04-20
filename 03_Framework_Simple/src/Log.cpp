@@ -55,6 +55,22 @@ void Log(const char* pszFmt, ...)
 		pszBuf[len-2] = '\n';
 	}
 
+	//由于cl和clang对utf-8源码处理方式不同
+	//cl /source-charset:utf-8 会自动将源码中的字符串转为ansi
+	//clang 默认就支持utf-8源码
+	
+	bool bFromUtf8 = false;
+	char* pszAnsi = NULL;
+
+#ifdef COMPILE_CL
+	bFromUtf8 = false;
+#else
+	if (utf82ansi(pszBuf, &pszAnsi))
+	{
+		bFromUtf8 = true;
+	}
+#endif
+
 	HANDLE hFile = _CreateMyFile(_pszFile);
 	if (NULL == hFile)
 		return;
@@ -62,36 +78,29 @@ void Log(const char* pszFmt, ...)
 	SetFilePointer(hFile, 0, 0, FILE_END);
 
 	DWORD dwWriteSize = 0;
-	BOOL bRet = ::WriteFile(hFile, pszBuf, strlen(pszBuf),
+	BOOL bRet = 0;
+	if (bFromUtf8)
+	{
+		printf("%s", pszAnsi);
+		bRet = ::WriteFile(hFile, pszAnsi, strlen(pszAnsi),
 					&dwWriteSize, NULL);
+		free(pszAnsi);
+	} else {
+		printf("%s", pszBuf);
+		bRet = ::WriteFile(hFile, pszBuf, strlen(pszBuf),
+					&dwWriteSize, NULL);
+	}
+	
 	if (bRet)
 	{
 		FlushFileBuffers(hFile);
-
-		//由于cl和clang对utf-8源码处理方式不同
-		//cl /source-charset:utf-8 会自动将源码中的字符串转为ansi
-		//clang 默认就支持utf-8源码
-		//解决了控制台和log文件输出中文问题，但是log文件的格式会有不同
-		//  cl的log文件是ansi  clang的log文件是utf-8
-#ifdef COMPILE_CL
-		printf("%s", pszBuf);
-#else
-		char* pszAnsi = NULL;
-		if (utf82ansi(pszBuf, &pszAnsi))
-		{
-			printf("%s", pszAnsi);
-			free(pszAnsi);
-		} else {
-			printf("%s", pszBuf);
-		}
-#endif
-		if (_autoRtn)
-		{
-			printf("\n");
-		}
 	}
-
 	CloseHandle(hFile);
+
+	if (_autoRtn)
+	{
+		printf("\n");
+	}
 }
 
 void InitLogFile(const char* pszPath, const char* pszFile)

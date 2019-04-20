@@ -5,7 +5,7 @@ call clenv.bat
 
 
 :: 1 vs cl   2 clang
-set USE_CL=1
+set USE_CL=2
 
 ::vs cl use utf8 : 文件 -> 高级保存选项 -> UTF-8无签名（代码页65001）
 
