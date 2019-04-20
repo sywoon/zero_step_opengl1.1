@@ -24,7 +24,7 @@ static LRESULT CALLBACK _WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
     {
     	switch (uMsg)
 		{
-		case WM_CREATE:  //´ËÊ±CWin32»¹Ã»½Ó¹Ü
+		case WM_CREATE:  //æ­¤æ—¶CWin32è¿˜æ²¡æ¥ç®¡
 			{																
 				s_pWin32->SetVisible(true);
 				return 0;
@@ -63,8 +63,8 @@ CWin32::CWin32()
 		, _resizeDraw(false)
 		, _isVisible(false)
 		, _isLooping(true)
-		, _nWinWidth(960)
-		, _nWinHeight(640)
+		, _nWinWidth(600)
+		, _nWinHeight(500)
 		, _dwLastTickCount(0)
 {
 	assert(s_pWin32 == NULL);
@@ -115,7 +115,7 @@ bool CWin32::RegisterMyClass()
 	ZeroMemory(&windowClass, sizeof(WNDCLASSEX));
 
 	windowClass.cbSize			= sizeof(WNDCLASSEX);
-	//ÒÆ¶¯Ê±ÖØ»­£¬²¢Îª´°¿ÚÈ¡µÃDC
+	//ç§»åŠ¨æ—¶é‡ç”»ï¼Œå¹¶ä¸ºçª—å£å–å¾—DC
 	windowClass.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	windowClass.lpfnWndProc		= (WNDPROC)(_WindowProc);
 	windowClass.hInstance		= _hInstance;
@@ -125,7 +125,7 @@ bool CWin32::RegisterMyClass()
 
 	if (RegisterClassEx(&windowClass) == 0)
 	{
-		MessageBox(HWND_DESKTOP, "´°¿Ú´°¿ÚÊ§°Ü!", "Error", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(HWND_DESKTOP, "çª—å£çª—å£å¤±è´¥!", "Error", MB_OK | MB_ICONEXCLAMATION);
 		return false;
 	}
 
@@ -142,28 +142,28 @@ HWND CWin32::CreateMyWindow(LPVOID lpParam)
 	DWORD windowStyle = WS_TILEDWINDOW;
 	DWORD windowExtendedStyle = WS_EX_APPWINDOW;						
 
-	if (_bFullScreen)  //Èç¹ûÎªÈ«ÆÁÄ£Ê½£¬³¢ÊÔ×ª»¯ÎªÈ«ÆÁÄ£Ê½
+	if (_bFullScreen)  //å¦‚æœä¸ºå…¨å±æ¨¡å¼ï¼Œå°è¯•è½¬åŒ–ä¸ºå…¨å±æ¨¡å¼
 	{
-		//È«ÆÁÄ£Ê½×ª»»Ê§°Ü£¬µ¯³ö¶Ô»°¿òÌáÊ¾£¬²¢³¢ÊÔ´°¿ÚÄ£Ê½
+		//å…¨å±æ¨¡å¼è½¬æ¢å¤±è´¥ï¼Œå¼¹å‡ºå¯¹è¯æ¡†æç¤ºï¼Œå¹¶å°è¯•çª—å£æ¨¡å¼
 		if (!ChangeScreenSetting())
 		{	
-			MessageBox(HWND_DESKTOP, "Ä£Ê½×ª»»Ê§°Ü.\nÔÚ´°¿ÚÄ£Ê½ÏÂÔËĞĞ.", "Error", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(HWND_DESKTOP, "æ¨¡å¼è½¬æ¢å¤±è´¥.\nåœ¨çª—å£æ¨¡å¼ä¸‹è¿è¡Œ.", "Error", MB_OK | MB_ICONEXCLAMATION);
 			_bFullScreen = false;
 		}
 		else
 		{
 			// ShowCursor(false);
 
-			//ÉèÖÃ´°¿ÚÄ£Ê½Îª¶¥²ã´°¿Ú
+			//è®¾ç½®çª—å£æ¨¡å¼ä¸ºé¡¶å±‚çª—å£
 			windowStyle = WS_POPUP;  
 			windowExtendedStyle |= WS_EX_TOPMOST;
 		}																
 	}
 
-	/// µ÷ÕûÎÒÃÇ´°¿ÚµÄ´óĞ¡£¬Ê¹Æä¿Í»§ÇøµÄ´óĞ¡ÎªÎÒÃÇÉèÖÃµÄ´óĞ¡
+	/// è°ƒæ•´æˆ‘ä»¬çª—å£çš„å¤§å°ï¼Œä½¿å…¶å®¢æˆ·åŒºçš„å¤§å°ä¸ºæˆ‘ä»¬è®¾ç½®çš„å¤§å°
 	int nX = 0;
 	int nY = 0;
-	RECT windowRect;  //Õû¸ö´°¿Ú´óĞ¡ ·ÇÈ«ÆÁÏÂ ´óÓÚ¿Í»§Çø
+	RECT windowRect;  //æ•´ä¸ªçª—å£å¤§å° éå…¨å±ä¸‹ å¤§äºå®¢æˆ·åŒº
 	if (_bFullScreen)
 	{
 		windowRect.left = 0;
@@ -176,37 +176,37 @@ HWND CWin32::CreateMyWindow(LPVOID lpParam)
 		nX = (_nSrnWidth - _nWinWidth) / 2;
 		nY = (_nSrnHeight - _nWinHeight) / 2;
 
-		//Ê¹´°¿Ú¾ßÓĞ3DÍâ¹Û
+		//ä½¿çª—å£å…·æœ‰3Då¤–è§‚
 		windowRect.left = 0;
 		windowRect.top = 0;
 		windowRect.right = GetWidth();
 		windowRect.bottom = GetHeight();
 
-		//Ê¹´°¿Ú¾ßÓĞ3DÍâ¹Û
+		//ä½¿çª—å£å…·æœ‰3Då¤–è§‚
 		windowExtendedStyle |=  WS_EX_WINDOWEDGE;
-		// [0,960,0,640]  ×ª»»Ç°
+		// [0,960,0,640]  è½¬æ¢å‰
 		AdjustWindowRectEx(&windowRect, windowStyle, 0, windowExtendedStyle);
-		// [-8,968,-31,648]  ×ª»»ºó
+		// [-8,968,-31,648]  è½¬æ¢å
 	}
 
 	Log("win size:%d,%d,", windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
-	HWND hWnd = CreateWindowEx(windowExtendedStyle,						// ´°¿ÚµÄÀ©Õ¹·ç¸ñ */
-							_pszClassName,								// ´°¿ÚµÄÀàÃû */
-							_pszWinTitle,								// ´°¿Ú±êÌâ */
-							windowStyle,								// ´°¿ÚµÄ·ç¸ñ */
-							nX,nY,                                      // ´°¿ÚµÄ×óÉÏ½ÇÎ»ÖÃ */
-							windowRect.right - windowRect.left,			// ´°¿ÚµÄ¿í¶È */
-							windowRect.bottom - windowRect.top,			// ´°¿ÚµÄ¸ß¶È */
-                            HWND_DESKTOP,								// ´°¿ÚµÄ¸¸´°¿ÚÎª×ÀÃæ */
-							0,											// ÎŞ²Ëµ¥ */
-							_hInstance,									// ´«Èë´°¿ÚµÄÊµÀı¾ä±ú */
-							lpParam);									// paramÖ¸Õë
+	HWND hWnd = CreateWindowEx(windowExtendedStyle,						// çª—å£çš„æ‰©å±•é£æ ¼ */
+							_pszClassName,								// çª—å£çš„ç±»å */
+							_pszWinTitle,								// çª—å£æ ‡é¢˜ */
+							windowStyle,								// çª—å£çš„é£æ ¼ */
+							nX,nY,                                      // çª—å£çš„å·¦ä¸Šè§’ä½ç½® */
+							windowRect.right - windowRect.left,			// çª—å£çš„å®½åº¦ */
+							windowRect.bottom - windowRect.top,			// çª—å£çš„é«˜åº¦ */
+                            HWND_DESKTOP,								// çª—å£çš„çˆ¶çª—å£ä¸ºæ¡Œé¢ */
+							0,											// æ— èœå• */
+							_hInstance,									// ä¼ å…¥çª—å£çš„å®ä¾‹å¥æŸ„ */
+							lpParam);									// paramæŒ‡é’ˆ
 
 	if (NULL == hWnd)
 	{
 		_isLooping = false;
 		char szError[255] = {0};
-		sprintf(szError, "´°¿Ú´´½¨Ê§°Ü:%d!", GetLastError());
+		sprintf(szError, "çª—å£åˆ›å»ºå¤±è´¥:%d!", (int)GetLastError());
 		MessageBox(HWND_DESKTOP, szError, "Error", MB_OK | MB_ICONEXCLAMATION);
 		return NULL;
 	}
@@ -216,7 +216,7 @@ HWND CWin32::CreateMyWindow(LPVOID lpParam)
 
 
 
-//ÇĞÎªÈ«ÆÁÄ£Ê½ 
+//åˆ‡ä¸ºå…¨å±æ¨¡å¼ 
 bool CWin32::ChangeScreenSetting()
 {
 	DEVMODE dmScreenSettings;
@@ -224,11 +224,11 @@ bool CWin32::ChangeScreenSetting()
 	dmScreenSettings.dmSize			= sizeof(DEVMODE);
 	dmScreenSettings.dmPelsWidth	= _nSrnWidth;
 	dmScreenSettings.dmPelsHeight	= _nSrnHeight;
-	dmScreenSettings.dmBitsPerPel	= 32;					/**< ÉèÖÃÎ»Éî¶È */
-	//dmScreenSettings.dmDisplayFrequency = 75;             /**< ÉèÖÃÆÁÄ»Ë¢ĞÂÂÊ */
+	dmScreenSettings.dmBitsPerPel	= 32;					/**< è®¾ç½®ä½æ·±åº¦ */
+	//dmScreenSettings.dmDisplayFrequency = 75;             /**< è®¾ç½®å±å¹•åˆ·æ–°ç‡ */
 	dmScreenSettings.dmFields		= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;//| DM_DISPLAYFREQUENCY;
 
-	/// ¸Ä±äÏÔÊ¾Ä£Ê½
+	/// æ”¹å˜æ˜¾ç¤ºæ¨¡å¼
 	if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		return false;
 
@@ -246,7 +246,7 @@ int CWin32::GetHeight()
 	return _bFullScreen ? _nSrnHeight : _nWinHeight;
 }
 
-//ÇĞ»» È«ÆÁ/´°¿ÚÄ£Ê½
+//åˆ‡æ¢ å…¨å±/çª—å£æ¨¡å¼
 void CWin32::ToggleFullScreen()
 {
 	PostMessage(_hWnd, WM_TOGGLE_FULLSCREEN, 0, 0);
@@ -260,50 +260,50 @@ void CWin32::TerminateApplication()
 
 bool CWin32::InitOpenGL(HWND hWnd, HGLRC& hRC)
 {
-	HDC hDC = GetDC(hWnd);  //Éè±¸ÃèÊö±í
+	HDC hDC = GetDC(hWnd);  //è®¾å¤‡æè¿°è¡¨
 	if (hDC == NULL)
 		return false;
 	_hDC = hDC;
 
-	PIXELFORMATDESCRIPTOR pfd =	   //ÏñËØÃèÊö½á¹¹
+	PIXELFORMATDESCRIPTOR pfd =	   //åƒç´ æè¿°ç»“æ„
 	{
 		sizeof(PIXELFORMATDESCRIPTOR),
-		1,								 /**< °æ±¾ºÅ */
-		PFD_DRAW_TO_WINDOW	|			 /**< »º´æÇøµÄÊä³öÏÔÊ¾ÔÚÒ»¸ö´°¿ÚÖĞ */
-		PFD_SUPPORT_OPENGL	|			 /**< »º´æÇøÖ§³ÖOpenGL»æÍ¼ */
-		PFD_STEREO			|			 /**< ÑÕÉ«»º´æÇøÊÇÁ¢Ìå»º´æ */
-		PFD_DOUBLEBUFFER,				 /**< ÑÕÉ«»º´æÇøÊÇË«»º´æ */
-		PFD_TYPE_RGBA,					 /**< Ê¹ÓÃRGBAÑÕÉ«¸ñÊ½ */
-		32,								 /**< ÑÕÉ«»º´æÇøÖĞÑÕÉ«ÖµËùÕ¼µÄÎ»Éî */
-		0, 0, 0, 0, 0, 0,				 /**< Ê¹ÓÃÄ¬ÈÏµÄÑÕÉ«ÉèÖÃ */
-		0,								 /**< ÎŞAlpha»º´æ */
-		0,								 /**< ÑÕÉ«»º´æÇøÖĞalpha³É·ÖµÄÒÆÎ»¼ÆÊı */
-		0,								 /**< ÎŞÀÛ¼Æ»º´æÇø */
-		0, 0, 0, 0,						 /**< ÀÛ¼Æ»º´æÇøÎŞÒÆÎ» */
-		32,								 /**< 32Î»Éî¶È»º´æ */
-		0,								 /**< ÎŞÃÉ°æ»º´æ */
-		0,								 /**< ÎŞ¸¨Öú»º´æÇø */
-		PFD_MAIN_PLANE,					 /**< ±ØĞëÎªPFD_MAIN_PLANE£¬ÉèÖÃÎªÖ÷»æÍ¼²ã */
-		0,								 /**< ±íÊ¾OpenGLÊµÏÖËùÖ§³ÖµÄÉÏ²ã»òÏÂ²ãÆ½ÃæµÄÊıÁ¿ */
-		0, 0, 0							 /**< ¹ıÊ±£¬ÒÑ²»ÔÙÊ¹ÓÃ */
+		1,								 /**< ç‰ˆæœ¬å· */
+		PFD_DRAW_TO_WINDOW	|			 /**< ç¼“å­˜åŒºçš„è¾“å‡ºæ˜¾ç¤ºåœ¨ä¸€ä¸ªçª—å£ä¸­ */
+		PFD_SUPPORT_OPENGL	|			 /**< ç¼“å­˜åŒºæ”¯æŒOpenGLç»˜å›¾ */
+		PFD_STEREO			|			 /**< é¢œè‰²ç¼“å­˜åŒºæ˜¯ç«‹ä½“ç¼“å­˜ */
+		PFD_DOUBLEBUFFER,				 /**< é¢œè‰²ç¼“å­˜åŒºæ˜¯åŒç¼“å­˜ */
+		PFD_TYPE_RGBA,					 /**< ä½¿ç”¨RGBAé¢œè‰²æ ¼å¼ */
+		32,								 /**< é¢œè‰²ç¼“å­˜åŒºä¸­é¢œè‰²å€¼æ‰€å çš„ä½æ·± */
+		0, 0, 0, 0, 0, 0,				 /**< ä½¿ç”¨é»˜è®¤çš„é¢œè‰²è®¾ç½® */
+		0,								 /**< æ— Alphaç¼“å­˜ */
+		0,								 /**< é¢œè‰²ç¼“å­˜åŒºä¸­alphaæˆåˆ†çš„ç§»ä½è®¡æ•° */
+		0,								 /**< æ— ç´¯è®¡ç¼“å­˜åŒº */
+		0, 0, 0, 0,						 /**< ç´¯è®¡ç¼“å­˜åŒºæ— ç§»ä½ */
+		32,								 /**< 32ä½æ·±åº¦ç¼“å­˜ */
+		0,								 /**< æ— è’™ç‰ˆç¼“å­˜ */
+		0,								 /**< æ— è¾…åŠ©ç¼“å­˜åŒº */
+		PFD_MAIN_PLANE,					 /**< å¿…é¡»ä¸ºPFD_MAIN_PLANEï¼Œè®¾ç½®ä¸ºä¸»ç»˜å›¾å±‚ */
+		0,								 /**< è¡¨ç¤ºOpenGLå®ç°æ‰€æ”¯æŒçš„ä¸Šå±‚æˆ–ä¸‹å±‚å¹³é¢çš„æ•°é‡ */
+		0, 0, 0							 /**< è¿‡æ—¶ï¼Œå·²ä¸å†ä½¿ç”¨ */
 	};
 
-	GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);	/**< ²éÕÒÒ»¸ö¼æÈİµÄÏñËØ¸ñÊ½ */
+	GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);	/**< æŸ¥æ‰¾ä¸€ä¸ªå…¼å®¹çš„åƒç´ æ ¼å¼ */
 	if (pixelFormat == 0)
 		return false;													
 
-	if (!SetPixelFormat(hDC, pixelFormat, &pfd))		/**< ÉèÖÃÏñËØ¸ñÊ½ */
+	if (!SetPixelFormat(hDC, pixelFormat, &pfd))		/**< è®¾ç½®åƒç´ æ ¼å¼ */
 		return false;													
 
-	hRC = wglCreateContext(hDC);		/**< ´´½¨OpenGLµÄäÖÈ¾ÃèÊö±í */
+	hRC = wglCreateContext(hDC);		/**< åˆ›å»ºOpenGLçš„æ¸²æŸ“æè¿°è¡¨ */
 	if (hRC == NULL)
 		return false;													
 
-	if (!wglMakeCurrent(hDC, hRC))			/**< ÉèÖÃµ±Ç°µÄOpenGLµÄäÖÈ¾¶ÔÏóÎªµ±Ç°µÄ´°¿Ú */
+	if (!wglMakeCurrent(hDC, hRC))			/**< è®¾ç½®å½“å‰çš„OpenGLçš„æ¸²æŸ“å¯¹è±¡ä¸ºå½“å‰çš„çª—å£ */
 		return false;													
     
-	ShowWindow(hWnd, SW_NORMAL);			/**< ÏÔÊ¾´°¿Ú */
-	ReshapeGL();							/**< ¸æËßOpenGLµ÷Õû´°¿Ú´óĞ¡ */
+	ShowWindow(hWnd, SW_NORMAL);			/**< æ˜¾ç¤ºçª—å£ */
+	ReshapeGL();							/**< å‘Šè¯‰OpenGLè°ƒæ•´çª—å£å¤§å° */
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glClearDepth(1.0f);
@@ -318,13 +318,13 @@ bool CWin32::InitOpenGL(HWND hWnd, HGLRC& hRC)
 }
 
 
-// µ±´°¿Ú´óĞ¡¸Ä±äÊ±£¬Í¨ÖªOpenGLµ÷Õû´óĞ¡
-// ÖØĞÂÉèÖÃopenglÍ¶Ó°¾ØÕó
+// å½“çª—å£å¤§å°æ”¹å˜æ—¶ï¼Œé€šçŸ¥OpenGLè°ƒæ•´å¤§å°
+// é‡æ–°è®¾ç½®openglæŠ•å½±çŸ©é˜µ
 void CWin32::ReshapeGL()
 {
 	GLsizei width = GetWidth();
 	GLsizei height = GetHeight();
-	glViewport(0, 0, width, height);	/**< ÖØĞÂÉèÖÃÊÓ¿Ú */
+	glViewport(0, 0, width, height);	/**< é‡æ–°è®¾ç½®è§†å£ */
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -332,7 +332,7 @@ void CWin32::ReshapeGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//ÊÓµã  Ä¿±êµã  ³¯Ïò
+	//è§†ç‚¹  ç›®æ ‡ç‚¹  æœå‘
 	gluLookAt(0.0,5.0,0.0,  0,0,0, 1.0,0.0,0);
 }
 
@@ -343,27 +343,27 @@ void CWin32::DestroyWin(HWND hWnd, HGLRC hRC)
 		HDC hDC = GetDC(hWnd);
 		if (hDC != NULL)
 		{
-			wglMakeCurrent(hDC, 0);					/**< ÉèÖÃµ±Ç°µÄOpenGLµÄäÖÈ¾¶ÔÏóÎª¿ÕNULL */
+			wglMakeCurrent(hDC, 0);					/**< è®¾ç½®å½“å‰çš„OpenGLçš„æ¸²æŸ“å¯¹è±¡ä¸ºç©ºNULL */
 			if (hRC != 0)
 			{
-				wglDeleteContext(hRC);				/**< ÊÍ·ÅOpenGLµÄäÖÈ¾ÃèÊö±í */
+				wglDeleteContext(hRC);				/**< é‡Šæ”¾OpenGLçš„æ¸²æŸ“æè¿°è¡¨ */
 			}
-			ReleaseDC(hWnd, hDC);					/**< ÊÍ·Å´°¿ÚµÄÉè±¸ÃèÊö±í */
+			ReleaseDC(hWnd, hDC);					/**< é‡Šæ”¾çª—å£çš„è®¾å¤‡æè¿°è¡¨ */
 		}
 		DestroyWindow(hWnd);
 	}
 
-	if (_bFullScreen)								/**< Èç¹ûÎªÈ«ÆÁÄ£Ê½£¬ÔÚ³ÌĞò½áÊøºó£¬±ä»»µ½´°¿ÚÄ£Ê½£¬²¢ÏÔÊ¾Êó±ê */
+	if (_bFullScreen)								/**< å¦‚æœä¸ºå…¨å±æ¨¡å¼ï¼Œåœ¨ç¨‹åºç»“æŸåï¼Œå˜æ¢åˆ°çª—å£æ¨¡å¼ï¼Œå¹¶æ˜¾ç¤ºé¼ æ ‡ */
 	{
-		ChangeDisplaySettings(NULL, 0);				/**< ±ä»»µ½´°¿ÚÄ£Ê½ */
-		ShowCursor(true);							/**< ÏÔÊ¾Êó±ê */
+		ChangeDisplaySettings(NULL, 0);				/**< å˜æ¢åˆ°çª—å£æ¨¡å¼ */
+		ShowCursor(true);							/**< æ˜¾ç¤ºé¼ æ ‡ */
 	}
 }
 
 void CWin32::DealWinMessage(HWND hWnd)
 {
 	MSG msg;
-	bool isMessagePumpActive = true;				/**< µ±ÏûÏ¢²»Îª¿ÕÊ±£¬´¦ÀíÏûÏ¢Ñ­»· */
+	bool isMessagePumpActive = true;				/**< å½“æ¶ˆæ¯ä¸ä¸ºç©ºæ—¶ï¼Œå¤„ç†æ¶ˆæ¯å¾ªç¯ */
 	_dwLastTickCount = GetTickCount();
 	while (isMessagePumpActive)
 	{
@@ -382,15 +382,15 @@ void CWin32::DealWinMessage(HWND hWnd)
 		{
 			if (!_isVisible)
 			{
-				WaitMessage();								/**< ÔİÍ£³ÌĞò£¬µÈ´ıÏûÏ¢ */
+				WaitMessage();								/**< æš‚åœç¨‹åºï¼Œç­‰å¾…æ¶ˆæ¯ */
 			}
 			else
-			{												/**< Ö´ĞĞÏûÏ¢Ñ­»· */
-				DWORD tickCount = GetTickCount();			/**< ·µ»Ø¼ÆÊ±Æ÷µÄµ±Ç°Öµ */
-				Update(tickCount - _dwLastTickCount);		/**< µ÷ÓÃÓÃ»§×Ô¶¨ÒåµÄ¸üĞÂº¯Êı */
-				_dwLastTickCount = tickCount;				/**< ÖØĞÂÉèÖÃÉÏÒ»´Î£¬¼ÆÊıÆ÷µÄÖµ */
-				Draw();										/**< µ÷ÓÃÓÃ»§×Ô¶¨ÒåµÄ»æÖÆº¯Êı */
-				SwapBuffers(_hDC);						/**< ½»»»Ç°ºóÖ¡»º´æ */
+			{												/**< æ‰§è¡Œæ¶ˆæ¯å¾ªç¯ */
+				DWORD tickCount = GetTickCount();			/**< è¿”å›è®¡æ—¶å™¨çš„å½“å‰å€¼ */
+				Update(tickCount - _dwLastTickCount);		/**< è°ƒç”¨ç”¨æˆ·è‡ªå®šä¹‰çš„æ›´æ–°å‡½æ•° */
+				_dwLastTickCount = tickCount;				/**< é‡æ–°è®¾ç½®ä¸Šä¸€æ¬¡ï¼Œè®¡æ•°å™¨çš„å€¼ */
+				Draw();										/**< è°ƒç”¨ç”¨æˆ·è‡ªå®šä¹‰çš„ç»˜åˆ¶å‡½æ•° */
+				SwapBuffers(_hDC);						/**< äº¤æ¢å‰åå¸§ç¼“å­˜ */
 			}
 		}
 	}
@@ -409,12 +409,12 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case WM_SYSCOMMAND:  //½Ø»ñÏµÍ³ÃüÁî
+	case WM_SYSCOMMAND:  //æˆªè·ç³»ç»Ÿå‘½ä»¤
 		switch (wParam)												
 		{
-			case SC_SCREENSAVE:   //½Ø»ñÆÁÄ»±£»¤Æô¶¯ÃüÁî
-			case SC_MONITORPOWER: //½Ø»ñÏÔÊ¾ÆäÊ¡µçÄ£Ê½Æô¶¯ÃüÁî
-				return 0;	//²»ÆôÓÃÕâÁ½¸öÃüÁî
+			case SC_SCREENSAVE:   //æˆªè·å±å¹•ä¿æŠ¤å¯åŠ¨å‘½ä»¤
+			case SC_MONITORPOWER: //æˆªè·æ˜¾ç¤ºå…¶çœç”µæ¨¡å¼å¯åŠ¨å‘½ä»¤
+				return 0;	//ä¸å¯ç”¨è¿™ä¸¤ä¸ªå‘½ä»¤
 			break;
 		}
 		break;
@@ -438,15 +438,15 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_PAINT:
-		if (_resizeDraw)	//Èç¹ûĞèÒªÖØ»æ
+		if (_resizeDraw)	//å¦‚æœéœ€è¦é‡ç»˜
 		{
-			ReshapeGL();	//ÖØĞÂÉèÖÃ´°¿ÚµÄ´óĞ¡
-			Draw();					//ÖØĞÂ»æÖÆ
-			SwapBuffers(_hDC);	//½»»»Ç°ºóÖ¡»º´æ
+			ReshapeGL();	//é‡æ–°è®¾ç½®çª—å£çš„å¤§å°
+			Draw();					//é‡æ–°ç»˜åˆ¶
+			SwapBuffers(_hDC);	//äº¤æ¢å‰åå¸§ç¼“å­˜
 		}
 		break;
 
-	case WM_SIZING:	 //´°¿ÚÕıÔÚ¸Ä±ä´óĞ¡
+	case WM_SIZING:	 //çª—å£æ­£åœ¨æ”¹å˜å¤§å°
 		{
 			RECT * rect = (RECT *)lParam;
 
@@ -460,18 +460,18 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	case WM_SIZE:		//´°¿Ú¸Ä±ä´óĞ¡ºó
-		switch (wParam)			//´¦Àí²»Í¬µÄ´°¿Ú×´Ì¬
+	case WM_SIZE:		//çª—å£æ”¹å˜å¤§å°å
+		switch (wParam)			//å¤„ç†ä¸åŒçš„çª—å£çŠ¶æ€
 		{
-		case SIZE_MINIMIZED:		//ÊÇ·ñ×îĞ¡»¯?
+		case SIZE_MINIMIZED:		//æ˜¯å¦æœ€å°åŒ–?
 			{
-				_isVisible = false;	//Èç¹ûÊÇ£¬ÔòÉèÖÃ²»¿É¼û
+				_isVisible = false;	//å¦‚æœæ˜¯ï¼Œåˆ™è®¾ç½®ä¸å¯è§
 				Log("SIZE_MINIMIZED");
 				return 0;											
 			}
 			break;
 
-		case SIZE_MAXIMIZED:		//´°¿ÚÊÇ·ñ×î´ó»¯?
+		case SIZE_MAXIMIZED:		//çª—å£æ˜¯å¦æœ€å¤§åŒ–?
 			{
 				_nWinWidth = LOWORD(lParam);
 				_nWinHeight = HIWORD(lParam);
@@ -479,7 +479,7 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				ReshapeGL();
 			}
 			break;
-		case SIZE_RESTORED:			//´°¿Ú±»»¹Ô­?
+		case SIZE_RESTORED:			//çª—å£è¢«è¿˜åŸ?
 			{
 				_isVisible = true;
 				_nWinWidth = LOWORD(lParam);
@@ -508,7 +508,7 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:		
 		break;
 
-	case WM_TOGGLE_FULLSCREEN:	//ÇĞ»» È«ÆÁ/´°¿ÚÄ£Ê½
+	case WM_TOGGLE_FULLSCREEN:	//åˆ‡æ¢ å…¨å±/çª—å£æ¨¡å¼
 	    {
 	    	_bFullScreen = !_bFullScreen;
 	  //   	if(!_bFullScreen)

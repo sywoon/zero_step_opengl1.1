@@ -32,12 +32,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//InitLogFile("Log", "output.log");
 	//ClearLog();
 	Log("=========start===========");
+	Log("ä¸­æ–‡æµ‹è¯•utf-8");
 	
 	CApplication::Create();
 	CWin32* pWin32 = CWin32::Create();
 
 	pWin32->SetFullScreen(false);
-    while (pWin32->IsLooping())  //ÇÐ»»È«ÆÁÓÃ
+    while (pWin32->IsLooping())  //åˆ‡æ¢å…¨å±ç”¨
     {
     	if (!pWin32->Init())
     		break;
