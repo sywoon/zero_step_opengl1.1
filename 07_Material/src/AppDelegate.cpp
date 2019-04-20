@@ -57,7 +57,8 @@ bool AppDelegate::Init()
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
 	///初始化
-	glClearColor(0.0f, 0.2f, 0.2f, 0.0f);						
+	glClearColor(0.0f, 0.2f, 0.2f, 0.0f);
+			
 	glClearDepth(1.0f);	
 	glDepthFunc(GL_LEQUAL);	
 	glEnable(GL_DEPTH_TEST);
@@ -142,7 +143,7 @@ void AppDelegate::Draw()
 		auxSolidSphere(0.5);
 	glPopMatrix();
 
-	/** 第二行第一列绘制的球有漫反射光和环境光，而镜面反射光。*/
+	/** 第二行第一列绘制的球有漫反射光和环境光，而无镜面反射光。*/
 	glPushMatrix();
 		glTranslatef (-2.0, 0.0, -6.0);
 		glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
