@@ -627,6 +627,9 @@ glEnable glDisable 控制某个状态
     栈内矩阵数要>1 否则报错
 ```
 
+* 矩阵的应用
+	![img](https://github.com/sywoon/zero_step_opengl1.1/blob/master/doc/05_Robot.png)
+
 
 
 # 第四章 OpenGL光照、材质和纹理
@@ -786,6 +789,8 @@ glEnable glDisable 控制某个状态
   glLightModeli(GIGHT_MODEL_TWO_SIDE, GL_TRUE)
 ```
 
+* 不同光的表现
+	![img](https://github.com/sywoon/zero_step_opengl1.1/blob/master/doc/06_Light.png)
 
 
 ## 材质
