@@ -5,7 +5,7 @@ call clenv.bat
 call winkitenv.bat
 
 :: 1 vs cl   2 clang
-set USE_CL=2
+set USE_CL=1
 
 
 cd src

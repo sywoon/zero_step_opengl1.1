@@ -20,6 +20,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     freopen("CONOUT$", "w", stderr);
 #endif
 
+    Log("=========start===========");
     Log("中文测试 utf-8");
 
 	int ret = -1;
