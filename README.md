@@ -2,7 +2,7 @@
 学习<<OpenGL游戏编程>>过程中的记录和心得。
 
 ## 编译工具
- vs2015 clang
+ vs2015 [clang8.0.0 32位](http://releases.llvm.org/download.html#8.0.0) [winsdk1809 10.0.17763.0](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive)
 
 
 ## utf-8编码问题
