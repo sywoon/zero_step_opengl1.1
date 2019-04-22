@@ -883,7 +883,65 @@ glEnable glDisable 控制某个状态
 ```
 
 
+## 纹理映射
 
+
+### 纹理资源的载入
+* BMP位图
+```
+  Bitmap-File Windows采用的图像文件存储格式。
+  Windows3.0之前 bmp格式与显示设备相关，
+  称为设备相关位图(Device-Dependent Bitmap, DDB)
+  之后为了与设备无关，改为设备无关位图(Device-Independent Bitmap, DIB)
+  可以在任何类型的显示设备上显示。
+```
+
+* BMP结构
+```
+  4部分组成：
+    文件头  BITMAPFILEHEADER bmfh
+	信息头  BITMAPINFOHEADER bmih
+	彩色表  RGBQUAD aColors[]
+	图像数据字节阵列  BYTE aBitmapBits[]
+
+  文件头: 文件类型、大小、存放位置
+  typedef struct tagBITMAPFILEHEADER {
+    UINT bfType;  文件类型
+	DWORD bfSize;
+	UINT bfReserverd1;  保留 0
+	UINT bfReserverd2;  保留 0
+	DOWRD bfOffBits;  说明从BITMAPFILEHEADER开始到实际的图像数据之间的字节偏移量
+  } BITMAPFILEHEADER;
+
+  typedef struct tagBITMAPINFOHEADER {
+    DWORD biSize;  结构大小
+	LONG biWidth;  图宽  单位：像素
+	LONG biHeight;  图高  单位：像素
+    WORD biPlanes;  为目标设备说明位面数 默认1
+    WORD biBitCount;  位数/像素  值：1 2 4 24
+	DWORD biCompression;  压缩类型  
+							BI_RGB没压缩 
+							BI_RLE8 每像素8位RLE压缩编码 
+								压缩格式由2字节组成(重复像素计数和颜色索引)
+							BI_RLE4 每像素4位RLE压缩编码 
+								压缩格式由2字节组成
+	DWORD biSizeImage;  图像大小 单位:字节  当用BI_RGB 可为0
+	LONG biXPelsPerMeter;  水平分辨率  像素/米
+	LONG biYPelsPerMeter;  垂直分辨率  像素/米
+	DWORD biClrUsed;  位图实际使用的彩色表中的颜色索引数
+	DWORD biClrImportant;  对图像显示有重要影响的颜色索引的数目 若为0 表示都重要
+  } BITMAPINFOHEADER;
+
+  彩色表包含的元素与位图所具有的颜色数相同，按重要性来排序。
+  像素的颜色用RGBQUAD结构来定义。
+  对于24位真彩色图像就不用彩色表，因为位图中rgb值已经代表了每个像素的颜色。
+```
+
+* 数据字节阵列
+```
+  按扫描行，从下到上存储。即：第一个像素是图片的左下角
+  每一行的字节数取决于图像的颜色数目和用像素表示的图像宽度。
+```
 
 
 
