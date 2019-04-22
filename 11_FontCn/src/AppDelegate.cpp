@@ -55,6 +55,7 @@ bool AppDelegate::Init()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	ResizeDraw(true);
 
+	//if(!font.InitFont(wglGetCurrentDC(), "宋体", 60)) 
 	if(!font.InitFont(wglGetCurrentDC(), "Arial", 60)) 
 	   return false;
 
@@ -82,7 +83,6 @@ void AppDelegate::Draw()
 	glTranslatef(0.0f, 0.0f, -10.0f);                              /**< 移入屏幕 */
 	glColor3f(cos(cnt1), sin(cnt2), 1.0f - 0.5f * cos(cnt1 + cnt2)); /**< 指定颜色 */
     
-	// 调用方法输出字符串   中文部分会被忽略
 	const char* txtUtf8 = "Hello,OpenGL游戏编程abc!";
 #ifdef COMPILE_CL
 	font.PrintText(txtUtf8, -3.5f + 2.0 * cos(cnt1), 3.5f * sin(cnt2)); 

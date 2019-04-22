@@ -1201,9 +1201,74 @@ glEnable glDisable 控制某个状态
   可以用第三方扩展库来显示，windows下的wgl函数 apple下的agl X系统下的glx函数
   步骤：
   1. 设备场景中创建具有一定属性的字体
+		CreateFont
   2. 建立一套基于DC字体位图的显示列表
+		glGenLists
+		wglUseFontBitmaps or wglUseFontOutlines
   3. 用glCallLists来调用这些列表
+		glCallLists
 ```
+
+
+### 中文显示
+```
+  中文的几个缺陷
+  1. 常用汉字有几千个，需要很多内存来存放显示列表
+  2. 常规的wglUseFont*** 显示中文不正确
+
+  解决方案：
+  1. 只生成需要的中文，用过后删除  性能不好
+  2. 先处理双字节代码 组合成一个WORD在传递给wglUseFont***
+
+  位图绘制发：
+  1. 创建一种需要的字体
+		CreateFont  "宋体"
+  2. 特定的设备场景中用GDI方式将文字形成一个单色位图
+		HDC hDC = ::CreateCompatibleDC(0);
+		::GetTextExtentPoint32(hDC, text, strlen(text), &size);
+		hBitmap = CreateBitmap(size.cx, size.cy,1, 1, NULL); 
+		TextOut(hDC, 0, 0, text, strlen(text));
+		::GetDIBits(hDC, hBitmap, 0, bm.bmHeight, pBmpBits, binf, DIB_RGB_COLORS);
+  3. 调用opengl绘制位图函数 glBitmap
+		glBitmap(size.cx, size.cy, 0.0, 0.0, 0.0, 0.0, pBmpBits); 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
