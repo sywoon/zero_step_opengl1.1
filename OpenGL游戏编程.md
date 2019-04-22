@@ -1117,8 +1117,72 @@ glEnable glDisable 控制某个状态
 ```
 
 
+#### OpenGL多重纹理
+  将多幅纹理应用到一个多边形上，然后对这些纹理按一定的方式进行混合。
+  在一个处理过程中。
+
+* 多重纹理简介
+```
+  应用1：光照贴图 
+      比如墙面，纹理1显示砖块 纹理2用灰度图制作出聚光灯效果 再融合一起
+  
+  早期显卡不支持多重纹理  在同一个地方用多个三角形叠加来模拟这种效果 性能很低
+  opengl1.1没有实现多重纹理函数 在扩展库中
+```
+
+* OpenGL扩展
+```
+  新出的显卡，为了用新的功能，会通过扩展库来使用。
+  不同厂商的扩展，导致命名混乱且同一个功能可能有多个扩展函数 
+
+  扩展名：
+  格式 GL_ARB_multitexture
+  第一段：
+	GL	OpenGL核心扩展
+	WGL  针对Windows平台的扩展
+	GLX  针对Unix/Linux平台的扩展
+	GLU  针对OpenGL Utility Library的扩展
+
+  第二段：谁开发的扩展
+    ARB  OpenGL Architecture Review Board 体系评审委员会核准的
+	EXT  多个硬件厂商支持的扩展
+	NV   nVidia公司
+	ATI  ATI公司开发的扩展
+	ATIX  ATI公司开发的实验性的扩展
+	SGI  Silicon Graphics(SGI)公司开发的扩展
+	SGIX  Silicon Graphics(SGI)公司开发的实验性扩展
+
+  第三段：真正的扩展名  功能本身
 
 
+  如何使用扩展：
+	1. 定义函数指针类型  因为windows平台上opengl扩展增加的函数
+	   是通过运行时动态获取函数指针来使用的
+	   SGI简化了这个步骤 封装到了glext.h中 包括产量和函数指针的定义
+
+	2. 检查显卡是否支持该扩展
+	 glGetString(GL_EXTENSIONS)获取支持的全部扩展信息
+	 再检查扩展名能否在这里面找到
+
+	3. 若支持可以通过 wglGetProcAddress获取该函数指针
+```
+
+* 多重纹理使用步骤
+```
+  1. 检查显卡是否支持 并获取其函数指针地址
+  2. 创建纹理对象 载入纹理数据
+  3. 为每一个纹理单元指定其纹理映射参数，并绑定纹理
+  4. 对于每个顶点，指定多组纹理坐标
+
+  void glActiveTexture(GLenum texUnit)
+  激活一个纹理单元 后续的纹理函数将作用于这个纹理单元上
+  texUnit: GL_TEXTUREi   i:[0,k-1]  k:opengl实现支持最大纹理单元数
+
+  glGetIntegerv(GL_MAX_TEXTURE_UINTS) 获取最大支持数
+
+  void glMultiTexCoord{1234}{sifd}[v](GLenum texUint, TYPE coords)
+  需要给每个顶点知道多组纹理坐标----每个纹理单元一组
+```
 
 
 
