@@ -1116,6 +1116,9 @@ glEnable glDisable 控制某个状态
 	删除n个纹理对象 若对象不存在或名称为0 则被忽略 不会引发错误
 ```
 
+* 实例 
+![纹理贴图](https://github.com/sywoon/zero_step_opengl1.1/blob/master/doc/08_Texture.png)
+
 
 #### OpenGL多重纹理
   将多幅纹理应用到一个多边形上，然后对这些纹理按一定的方式进行混合。
@@ -1184,7 +1187,9 @@ glEnable glDisable 控制某个状态
   需要给每个顶点知道多组纹理坐标----每个纹理单元一组
 ```
 
-
+* 实例 
+![单纹理](https://github.com/sywoon/zero_step_opengl1.1/blob/master/doc/09_MultiTexture01a.png)
+![多重纹理](https://github.com/sywoon/zero_step_opengl1.1/blob/master/doc/09_MultiTexture01b.png)
 
 
 
