@@ -887,7 +887,9 @@ glEnable glDisable 控制某个状态
 
 
 ### 纹理资源的载入
-* BMP位图
+
+#### BMP
+* BMP位图简介
 ```
   Bitmap-File Windows采用的图像文件存储格式。
   Windows3.0之前 bmp格式与显示设备相关，
@@ -918,7 +920,7 @@ glEnable glDisable 控制某个状态
 	LONG biWidth;  图宽  单位：像素
 	LONG biHeight;  图高  单位：像素
     WORD biPlanes;  为目标设备说明位面数 默认1
-    WORD biBitCount;  位数/像素  值：1 2 4 24
+    WORD biBitCount;  位数/像素  值：1 2 4 24 (?写错了 应该是16 24 32?)
 	DWORD biCompression;  压缩类型  
 							BI_RGB没压缩 
 							BI_RLE8 每像素8位RLE压缩编码 
@@ -944,8 +946,175 @@ glEnable glDisable 控制某个状态
 ```
 
 
+#### TGA
+
+* TGA位图简介
+```
+  美国Truevision公司为显卡开发的一种图像文件格式 .tga
+  有6种以上格式，用第三个字节来区别。
+
+  值     文件类型
+  0      没有图像数据
+  1      未压缩 颜色表图像
+  2      未压缩 rgb图像
+  3      未压缩 黑白图像
+  9      Runlenght编码的颜色表图像
+  10     runlenght编码的RGB图像
+  11     压缩的黑白图像
+```
+
+* TGA文件结构
+```
+  类似bitmap，文件头+信息头+图像数据
+
+  类型为2的结构：
+  偏移  长度   描述
+   0     1     图像信息字段的字符数 [0,255]  0表示没图像信息字段
+   1     1     颜色表类型  0：无  1：有
+   2     1     图像类型
+   3     5     颜色表规格  若颜色表类型字段为0 忽略， 否则如下：
+     3     2     颜色表首地址
+	 5     2     颜色表长度
+	 7     1     颜色表表项的位数 16 24 32
+   8    10     图像规格：
+	 8     2      x坐标起始位置
+	 10    2      y坐标起始位置
+	 12    2      图像宽度 像素
+	 14    2      图像高度
+	 16    1      每像素存储占用位数  16 24 32
+	 17    1      图像描述符字节
+   18   可变   图像信息字段
+   可变  可变  颜色表数据  若颜色变类型为0  则该项不存在
+   可变  可变  图像数据域  存储w×h个像素  每个像素包含RGB颜色值 顺序为BGR(为啥这么排？ bitmap也是这种情况)
+
+```
 
 
+#### OpenGL纹理映射
+
+* 纹理映射的步骤
+```
+  OpenGL的纹理映射只能在RGBA模式下使用
+  1. 定义纹理
+  2. 控制纹理
+  3. 设置映射方式
+  4. 绘制场景
+
+   渲染前需要启动用纹理映射
+	glEnable(GL_TEXTURE_2D);
+```
+
+* 纹理的定义
+```
+  通常定义在一个数组中，表示纹理空间中的一组网格点上的纹理值。
+  网格点之间的值，可以通过插值计算来获取，
+  再通过纹理空间到物体空间的坐标变换，将纹理映射到物体表面上。
+
+  void glTexImage2D(GLenum target, GLint level, GLint components,
+				GLsizei width, GLsizei height, GLsizei border, GLenum format,
+				GLenum type, const GLvoid *pixels)
+  定义一个二维纹理映射
+  target: GL_TEXTURE_2D
+  level: 具有多级分辨率的级数 若只有一种则为0
+  components: 1-4的整数  指出选择了r g b a中的哪些分量用于调整和混合
+		1：r分量  2：r和a  3：r g b  4：r g b a
+  width height:纹理图像的长宽 必须是2m+2b m为整数 b为border的值
+    若都为0 表示关闭纹理映射
+  border:边界宽度 通常为0   啥作用？
+  format:GL_COLOR_INDEX GL_RGB GL_RGBA GL_RED GL_GREW GL_BLUE GL_ALPHA
+       GL_LUMINANCE GL_LUMINANCE_ALPHA
+	   注意：不能用GL_STENCIL_INDEX GL_DEPTH_COMPONENT
+  type: 数据类型  GL_BYTE GL_UNSIGNED_BYTE GL_SHORT GL_UNSIGNED_SHORT GL_INT
+	  GL_UNSIGNED_INT GL_FLOAT GL_BITMAP
+  pixels: 纹理图像数据 包含边界
+
+  void glTexImage1D(...)  定义一维纹理映射 GL_TEXTURE_1D
+	2m or 2m+2
+```
+
+* 纹理控制
+```
+  纹理如何对应到屏幕像素
+  怎样通过纹理贴图实现纹理说法和纹理重复
+
+  void glTexParameter{if}[v](GLenum target, GLenum pname, TYPE param)
+  控制如何将纹理元素映射到片元上(fragment)
+  target: GL_TEXTURE_1D GL_TEXTURE_2D
+
+  参数类型            参数值
+  GL_TEXTURE_WRAP_S  GL_CLAMP GL_REPEAT
+  GL_TEXTURE_WRAP_T  GL_CLAMP GL_REPEAT
+  GL_TEXTURE_MAG_FILTER GL_NEAREST GL_LINEAR   放大滤波
+  GL_TEXTURE_MIN_FILTER GL_NEAREST GL_LINEAR   缩小滤波
+						GL_NEAREST_MIPMAP_NEAREST
+						GL_NEAREST_MIPMAP_LINEAR
+						GL_LINEAR_MIPMAP_NEAREST
+						GL_LINEAR_MIPMAP_LINEAR
+
+  一般纹理为正方形或长方形 但映射到多边形或曲面上 再变换到屏幕坐标时
+  不可能和屏幕像素一一对应
+  屏幕上的一个像素 可能是纹理的一小部分(放大) or 一大批纹素(缩小)
+  opengl采用滤波的方式 来解决这个问题：
+
+  GL_NEAREST：使用坐标离像素中心最近的纹素 可能操作锯齿现象
+  GL_LINEAR：使用离像素中心最近的2x2纹素阵列的加权线性平均值
+  缩小时 若有多级纹理 可有不同的参数
+
+
+  纹理的重复和截取：
+	纹理坐标指定为[0,1] 之外的值可以截取或重复
+	由GL_TEXTURE_WRAP_S _T来控制 横向和纵向处理方式
+	GL_CLAMP：大于1用1  小于0用0
+	GL_REPEAT：重复整个纹理
+```
+
+* 纹理的映射方式
+```
+  将纹理图像渲染到物体表面的映射方式
+  void glTexEnv{if}[v](GLenum target, GLenum pname, TYPE param)
+  target                       pname                 param
+  GL_TEXTURE_FILTER_CONTROL  GL_TEXTURE_LOD_BIAS    浮点数
+  GL_TEXTURE_ENV             GL_TEXTURE_ENV_MODE  GL_DECAL GL_MODULATE GL_BLEND
+                             GL_TEXTURE_ENV_COLOR (r,g,b,a)浮点数组
+							    只有采用GL_BLEND纹理函数才有用？？？
+```
+
+* 指定纹理坐标
+```
+  物体顶点需要定义几何坐标和纹理坐标
+  前者决定了顶点在屏幕上的位置，后者决定了哪个纹素赋予给该顶点
+  顶点间的坐标需要插值计算得到。
+
+  纹理坐标有1 2 3 4维形式 用s t r q来表示 以区别于物体坐标(x,y,z,w)
+  默认 t r为0  q为1用作齐次坐标
+
+  void glTexCoord{1234}{aifd}[v](TYPE coords)
+  设置当前纹理坐标  此后调用glVertex*()所产生的顶点都赋予当前的纹理坐标
+  不同函数后缀对应不同的TYPE值 GLshort GLint GLfloat GLdouble
+```
+
+* 纹理对象
+```
+  用于存储纹理数据，可重复使用提供性能  避免每次都glTexImage*D方式载入纹理
+  步骤：
+  1. 生成纹理对象名称
+    使用非0无符号整数作为对象名  为避免重复 需要用gl函数来得到其值
+    void glGenTexture(GLsizei n, GLuint *textureNames)
+	返回n个未使用的对象名
+
+  2. 创建纹理对象、绑定纹理对象到纹理数据
+    void glBindTexture(GLenum target, GLuint textureName)
+	首次调用 将创建一个纹理对象 并设置其名称为textureName
+	再将其纹理图像数据和纹理属性设置为默认值
+
+  3. 再次绑定纹理对象，将纹理映射到物体表面
+	再次调用2 设置该纹理对象为活动状态 然后调用修改纹理图像或属性函数时
+	将修改当前的纹理对象内容和属性
+
+  4. 删除纹理对象
+    void glDeleteTextures(GLsizei n, const GLuint* textureNames)
+	删除n个纹理对象 若对象不存在或名称为0 则被忽略 不会引发错误
+```
 
 
 
