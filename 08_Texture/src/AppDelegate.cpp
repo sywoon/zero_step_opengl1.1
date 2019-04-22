@@ -42,7 +42,7 @@ void CApplication::Destroy()
 AppDelegate::AppDelegate()
 	: CApplication()
 {
-	rot = 0.0;	
+	_rot = 0.0;	
 }
 
 bool AppDelegate::Init()
@@ -68,17 +68,17 @@ bool AppDelegate::Init()
 
 void AppDelegate::UnInit()
 {
-	texture1.FreeImage();             //释放纹理图像占用的内存
-	glDeleteTextures(1, &texture1.getID()); //删除纹理对象
+	_texture1.FreeImage();             //释放纹理图像占用的内存
+	glDeleteTextures(1, &_texture1.getID()); //删除纹理对象
 
-	texture2.FreeImage(); 
-	glDeleteTextures(1, &texture2.getID());
+	_texture2.FreeImage(); 
+	glDeleteTextures(1, &_texture2.getID());
 }
 
 
 void AppDelegate::Update(DWORD milliseconds)
 {
-	rot += milliseconds / 20.0;
+	_rot += milliseconds / 20.0;
 }
 
 
@@ -87,10 +87,10 @@ void AppDelegate::DrawSphere()
 {
 	glPushMatrix();
 		glTranslatef(2.0f, 0.0f, -10.0f);
-		glRotatef(rot, 0.0f, 1.0f, 1.0f);
+		glRotatef(_rot, 0.0f, 1.0f, 1.0f);
 
 		// 指定纹理 并激活
-		glBindTexture(GL_TEXTURE_2D, texture2.getID());
+		glBindTexture(GL_TEXTURE_2D, _texture2.getID());
 
 		GLUquadricObj* sphere = gluNewQuadric();  //每帧都创建?
 		gluQuadricOrientation(sphere, GLU_OUTSIDE);
@@ -112,10 +112,10 @@ void AppDelegate::DrawBox()
 
 	glPushMatrix();
 	glTranslatef(-2.0f, 0.0f, -10.0f);
-	glRotatef(rot, 1.0f, 1.0f, 0.0f);
+	glRotatef(_rot, 1.0f, 1.0f, 0.0f);
 	
 	/** 选择纹理 */
-	glBindTexture(GL_TEXTURE_2D, texture1.getID());
+	glBindTexture(GL_TEXTURE_2D, _texture1.getID());
 	
 	/** 开始绘制四边形 */
 	glBegin(GL_QUADS);												
@@ -182,13 +182,13 @@ void AppDelegate::Draw()
 
 bool AppDelegate::LoadTexture()
 {
-	if(!texture1.LoadTexture("res/image.bmp"))
+	if(!_texture1.LoadTexture("res/image.bmp"))
 	{
 		Log("装载位图文件失败！"); 
 		return false;
 	}
 
-	if(!texture2.LoadTexture("res/sphere.tga")) 
+	if(!_texture2.LoadTexture("res/sphere.tga")) 
 	{
 		Log("装载TGA文件失败！"); 
 		return false;

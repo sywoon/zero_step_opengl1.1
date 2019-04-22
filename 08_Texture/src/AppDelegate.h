@@ -24,7 +24,7 @@ private:
 	AppDelegate();
 
 private:
-	CBMPLoader texture1;                     /**< 位图载入类 */
-	CTGALoader texture2;                     /**< TGA文件载入类 */
-	float  rot;					             /**< 用于旋转物体 */	
+	CBMPLoader _texture1;                     /**< 位图载入类 */
+	CTGALoader _texture2;                     /**< TGA文件载入类 */
+	float  _rot;					             /**< 用于旋转物体 */	
 };
