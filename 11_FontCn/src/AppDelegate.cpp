@@ -56,7 +56,7 @@ bool AppDelegate::Init()
 	ResizeDraw(true);
 
 	//if(!font.InitFont(wglGetCurrentDC(), "宋体", 60)) 
-	if(!font.InitFont(wglGetCurrentDC(), "Arial", 60)) 
+	if(!font.InitFont("Arial", 60)) 
 	   return false;
 
 	return true;
@@ -84,16 +84,18 @@ void AppDelegate::Draw()
 	glColor3f(cos(cnt1), sin(cnt2), 1.0f - 0.5f * cos(cnt1 + cnt2)); /**< 指定颜色 */
     
 	const char* txtUtf8 = "Hello,OpenGL游戏编程abc!";
-#ifdef COMPILE_CL
 	font.PrintText(txtUtf8, -3.5f + 2.0 * cos(cnt1), 3.5f * sin(cnt2)); 
-#else
-	char* pAnsi = NULL;
-	if (utf82ansi(txtUtf8, &pAnsi))
-	{
-		font.PrintText(pAnsi, -3.5f + 2.0 * cos(cnt1), 3.5f * sin(cnt2)); 
-		free(pAnsi);
-	}
-#endif
+	
+//#ifdef COMPILE_CL
+//	font.PrintText(txtUtf8, -3.5f + 2.0 * cos(cnt1), 3.5f * sin(cnt2)); 
+//#else
+//	char* pAnsi = NULL;
+//	if (utf82ansi(txtUtf8, &pAnsi))
+//	{
+//		font.PrintText(pAnsi, -3.5f + 2.0 * cos(cnt1), 3.5f * sin(cnt2)); 
+//		free(pAnsi);
+//	}
+//#endif
 
 	// 强制执行所有的OpenGL命令
 	glFlush();	

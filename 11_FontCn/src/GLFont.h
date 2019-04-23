@@ -8,8 +8,8 @@ public:
 	GLFont();
 	virtual ~GLFont();
     
-	bool InitFont(HDC hDC, const char *fontName,int Size );  /**< 初始化字体 */
-	void PrintText(const char *text, float x, float y);    /**< 在位置(x,y)处绘制字符串string */
+	bool InitFont(const char *fontName = "宋体",int Size = 60);  /**< 初始化字体 */
+	void PrintText(const char *txtUtf8, float x, float y);    /**< 在位置(x,y)处绘制字符串string */
 	void KillGLFont();
 
 protected:

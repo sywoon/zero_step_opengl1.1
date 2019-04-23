@@ -1,6 +1,7 @@
 #include <windows.h>   
 #include <gl.h>    
 #include "GLFont.h"
+#include "Charset.h"
 
 
 GLFont::GLFont()
@@ -37,8 +38,22 @@ bool GLFont::InitFont(const char *fontName, int size)
 
 
 /** 在指定位置输出字符串 */
-void GLFont::PrintText(const char *text, float x, float y)
+void GLFont::PrintText(const char *txtUtf8, float x, float y)
 {
+	const char* textOut = NULL;
+#ifdef COMPILE_CL
+	textOut = txtUtf8;
+#else
+	char* pAnsi = NULL;
+	if (utf82ansi(txtUtf8, &pAnsi))
+	{
+		textOut = pAnsi;
+		
+	} else {
+		textOut = txtUtf8;
+	}
+#endif
+
     HBITMAP hBitmap, hOldBmp; /**< 定义两个位图句柄 */
 	BITMAP bm;               /**< 位图结构变量 */
 	SIZE size;               /**< 位图尺寸 */
@@ -60,7 +75,7 @@ void GLFont::PrintText(const char *text, float x, float y)
 	SelectObject(hDC, _hFont); /**< 选择字体 */
 	
 	/** 获取字符位图大小 */
-	::GetTextExtentPoint32(hDC, text, strlen(text), &size);
+	::GetTextExtentPoint32(hDC, textOut, strlen(textOut), &size);
 	
 	/** 创建与hDC相关单色位图 */
 	hBitmap = CreateBitmap(size.cx, size.cy,1, 1, NULL); 
@@ -71,7 +86,7 @@ void GLFont::PrintText(const char *text, float x, float y)
 	SetBkColor(hDC, RGB(0, 0, 0));              /**< 背景色为黑色 */
 	SetTextColor(hDC, RGB(255, 255, 255));      /**< 字体颜色白色 */
 	SetBkMode(hDC, OPAQUE);                     /**< 用当前的背景颜色填充背景 */
-	TextOut(hDC, 0, 0, text, strlen(text)); 	/**< 输出文字到暂存hDC */
+	TextOut(hDC, 0, 0, textOut, strlen(textOut)); 	/**< 输出文字到暂存hDC */
 	
 	/** 获得相关位图数据结构 */
 	GetObject(hBitmap, sizeof(bm), &bm);
@@ -125,6 +140,9 @@ void GLFont::PrintText(const char *text, float x, float y)
 		glEnable(GL_TEXTURE_2D);   /**< 开启纹理 */
 	glEnable(GL_DEPTH_TEST);       /**< 开启深度测试 */
 	glPopMatrix();
+
+	if (pAnsi) 
+		free(pAnsi);
 }
 
 /**< 删除字体 */

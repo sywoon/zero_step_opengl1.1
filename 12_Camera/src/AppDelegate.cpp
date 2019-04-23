@@ -94,7 +94,7 @@ bool AppDelegate::Init()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	ResizeDraw(true);
 
-	if(!_font.InitFont())
+	if(!_font.InitFont("宋体", 20))
 	{
 		Log("初始化字体失败!");
 	}
@@ -174,17 +174,23 @@ void  AppDelegate::PrintText()
 {
 	char string[128];                               /**< 用于保存输出字符串 */
 	glPushAttrib(GL_CURRENT_BIT);                   /**< 保存现有颜色属性信息 */
+
+	glPushMatrix(); 	
+	glTranslatef(0.0f, 0.0f, -10.0f); 
+
 	glColor3f(0.0f,1.0f,0.0f);                      /**< 设置文字颜色 */
 	sprintf(string,"当前位置:X=%3.1f  Y=%3.1f Speed =%3.1f ",   
 		     _camera.getView().x,-_camera.getView().z ,_camera.getSpeed()); /**< 字符串赋值 */
-	_font.PrintText(string,-5.0f,3.5f);
+	
+	_font.PrintText(string, -3.0f, 3.5f);
 
 	/** 输出帧速 */
 	CaculateFrameRate();                               /**< 计算帧速 */
     sprintf(string,"FPS:%3.0f",_fps);                 /**< 字符串赋值 */
-	_font.PrintText(string, -5.0f,3.0f);              /**< 输出字符串 */
+	_font.PrintText(string, -3.0f, 3.0f);              /**< 输出字符串 */
+	
+	glPopMatrix();
 	glPopAttrib();
-		
 }
 
 /** 绘制网格地面 */
