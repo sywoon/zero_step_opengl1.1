@@ -36,34 +36,33 @@ static LRESULT CALLBACK _WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 }
 
 
-Keys::Keys() 
+CKeys::CKeys() 
 { 
 	Clear(); 
 }
 
-void Keys::Clear() 
+void CKeys::Clear() 
 { 
 	ZeroMemory(&m_keyDown, sizeof(m_keyDown)); 
 }
 
-bool Keys::IsPressed(unsigned int key) 
+bool CKeys::IsPressed(unsigned int key) 
 { 
 	assert(key < MAX_KEYS);
 	return  m_keyDown[key];
 }
 
-void Keys::SetPressed(unsigned int key) 
+void CKeys::SetPressed(unsigned int key) 
 {
 	assert(key < MAX_KEYS);
 	m_keyDown[key] = true;
 }
 
-void Keys::SetReleased(unsigned int key) 
+void CKeys::SetReleased(unsigned int key) 
 {
 	assert(key < MAX_KEYS);
 	m_keyDown[key] = false;
 }
-
 
 
 CWin32::CWin32()
@@ -449,6 +448,19 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			_dwLastTickCount = GetTickCount();
 			return 0;
+		}
+		break;
+
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MOUSEMOVE:
+		{
+			int xPos = LOWORD(lParam); 
+			int yPos = HIWORD(lParam); 
+			_mouse.SetPos(xPos, yPos);
+			_mouse.SetKeyStatus(wParam);
 		}
 		break;
 

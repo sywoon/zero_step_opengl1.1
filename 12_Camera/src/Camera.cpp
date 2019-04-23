@@ -3,6 +3,9 @@
 #include <windows.h>
 #include <gl.h>
 #include <glu.h>
+#include <stdio.h>
+#include "Mouse.h"
+#include "Application.h"
 
 Camera::Camera()
 {
@@ -23,6 +26,11 @@ Camera::~Camera()
 {
 }
 
+void Camera::resetView()
+{
+	_view = _viewOrigin;
+}
+
 /** 设置摄像机的位置,朝向和向上向量 */
 void Camera::setCamera( float positionX, float positionY, float positionZ,
 				  		float viewX,     float viewY,     float viewZ,
@@ -35,6 +43,7 @@ void Camera::setCamera( float positionX, float positionY, float positionZ,
 	/** 设置摄像机 */
 	_position = position;	
 	_view     = view;			
+	_viewOrigin = view;
 	_upVector = upVector;	
 }
 
@@ -72,81 +81,128 @@ void Camera::rotateView(float angle, float x, float y, float z)
 /** 用鼠标旋转摄像机 */
 void Camera::setViewByMouse()
 {
-	POINT mousePos;									  /**< 保存当前鼠标位置 */
-	int middleX = GetSystemMetrics(SM_CXSCREEN) >> 1; /**< 得到屏幕宽度的一半 */
-	int middleY = GetSystemMetrics(SM_CYSCREEN) >> 1; /**< 得到屏幕高度的一半 */
-	float angleY = 0.0f;							  /**< 摄像机左右旋转角度 */
-	float angleZ = 0.0f;		                      /**< 摄像机上下旋转角度 */					
-	static float currentRotX = 0.0f;
-	
-	/** 得到当前鼠标位置 */
-	GetCursorPos(&mousePos);						
-	ShowCursor(TRUE);
-	
-	/** 如果鼠标没有移动,则不用更新 */
-	if( (mousePos.x == middleX) && (mousePos.y == middleY) )
+	static POINT lstPos = {0, 0};
+	static Vector3 lstView = _view;
+
+	CWin32& win32 = CApplication::GetInstance()->GetWin32();
+	CMouse& mouse = win32.GetMouse();
+	if (!mouse.IsLBtnDown())
+	{
+		if (lstPos.x != 0 && lstPos.y != 0)
+		{
+			lstView = _view;
+		}
+		lstPos.x = lstPos.y = 0;
+		return;
+	}	
+
+	POINT& curPos = mouse.GetPos();
+	if (lstPos.x == 0)
+	{
+		lstPos = curPos;
+		return;
+	}
+
+	if (lstPos.x == curPos.x && lstPos.y == curPos.y)
 		return;
 
-	/** 设置鼠标位置在屏幕中心 */
-	SetCursorPos(middleX, middleY);	
-	
-	/**< 得到鼠标移动方向 */
-	angleY = (float)( (middleX - mousePos.x) ) / 1000.0f;		
-	angleZ = (float)( (middleY - mousePos.y) ) / 1000.0f;		
+	// 得到鼠标移动方向
+	float angleY = (float)(lstPos.x - curPos.x)/win32.GetWidth();	// 摄像机左右旋转角度	
+	float angleZ = (float)(lstPos.y - curPos.y)/win32.GetHeight() * 2.0;	
 
-    static float lastRotX = 0.0f;      /**< 用于保存旋转角度 */
- 	lastRotX = currentRotX; 
-	
-	/** 跟踪摄像机上下旋转角度 */
-	currentRotX += angleZ;
- 
-	/** 如果上下旋转弧度大于1.0,我们截取到1.0并旋转 */
-	if(currentRotX > 1.0f)     
+	//resetView();  // 这种方式会导致每次都充值到原点
+	_view = lstView;
+
+	// 摄像机左右旋转角度
+	rotateView(angleY, 0, 1, 0);
+
+	// 摄像机上下旋转角度	
 	{
-		currentRotX = 1.0f;
-		
-		/** 根据保存的角度旋转方向 */
-		if(lastRotX != 1.0f) 
-		{
-			/** 通过叉积找到与旋转方向垂直的向量 */
-			Vector3 vAxis = _view - _position;
-			vAxis = vAxis.crossProduct(_upVector);
-			vAxis = vAxis.normalize();
-			
-			///旋转
-			rotateView( 1.0f - lastRotX, vAxis.x, vAxis.y, vAxis.z);
-		}
-	}
-	/** 如果旋转弧度小于-1.0,则也截取到-1.0并旋转 */
-	else if(currentRotX < -1.0f)
-	{
-		currentRotX = -1.0f;
-				
-		if(lastRotX != -1.0f)
-		{
-			/** 通过叉积找到与旋转方向垂直的向量 */
-			Vector3 vAxis = _view - _position;
-			vAxis = vAxis.crossProduct(_upVector);
-			vAxis = vAxis.normalize();
-			
-			///旋转
-			rotateView( -1.0f - lastRotX, vAxis.x, vAxis.y, vAxis.z);
-		}
-	}
-	/** 否则就旋转angleZ度 */
-	else 
-	{	
-		/** 找到与旋转方向垂直向量 */
+		// 通过叉积找到与旋转方向垂直的向量
 		Vector3 vAxis = _view - _position;
 		vAxis = vAxis.crossProduct(_upVector);
 		vAxis = vAxis.normalize();
-	
+
 		///旋转
 		rotateView(angleZ, vAxis.x, vAxis.y, vAxis.z);
 	}
 
-	/** 总是左右旋转摄像机 */
-	rotateView(angleY, 0, 1, 0);
+
+	// POINT mousePos;									  /**< 保存当前鼠标位置 */
+	// int middleX = GetSystemMetrics(SM_CXSCREEN) >> 1; /**< 得到屏幕宽度的一半 */
+	// int middleY = GetSystemMetrics(SM_CYSCREEN) >> 1; /**< 得到屏幕高度的一半 */
+	// float angleY = 0.0f;							  /**< 摄像机左右旋转角度 */
+	// float angleZ = 0.0f;		                      /**< 摄像机上下旋转角度 */					
+	// static float currentRotX = 0.0f;
+	
+	// /** 得到当前鼠标位置 */
+	// GetCursorPos(&mousePos);						
+	// ShowCursor(TRUE);
+	
+	// /** 如果鼠标没有移动,则不用更新 */
+	// if( (mousePos.x == middleX) && (mousePos.y == middleY) )
+	// 	return;
+
+	// /** 设置鼠标位置在屏幕中心 */
+	// SetCursorPos(middleX, middleY);	
+	
+	// /**< 得到鼠标移动方向 */
+	// angleY = (float)( (middleX - mousePos.x) ) / 1000.0f;		
+	// angleZ = (float)( (middleY - mousePos.y) ) / 1000.0f;		
+
+ //    static float lastRotX = 0.0f;      /**< 用于保存旋转角度 */
+ // 	lastRotX = currentRotX; 
+	
+	// /** 跟踪摄像机上下旋转角度 */
+	// currentRotX += angleZ;
+ 
+	// /** 如果上下旋转弧度大于1.0,我们截取到1.0并旋转 */
+	// if(currentRotX > 1.0f)     
+	// {
+	// 	currentRotX = 1.0f;
+		
+	// 	/** 根据保存的角度旋转方向 */
+	// 	if(lastRotX != 1.0f) 
+	// 	{
+	// 		/** 通过叉积找到与旋转方向垂直的向量 */
+	// 		Vector3 vAxis = _view - _position;
+	// 		vAxis = vAxis.crossProduct(_upVector);
+	// 		vAxis = vAxis.normalize();
+			
+	// 		///旋转
+	// 		rotateView( 1.0f - lastRotX, vAxis.x, vAxis.y, vAxis.z);
+	// 	}
+	// }
+	// /** 如果旋转弧度小于-1.0,则也截取到-1.0并旋转 */
+	// else if(currentRotX < -1.0f)
+	// {
+	// 	currentRotX = -1.0f;
+				
+	// 	if(lastRotX != -1.0f)
+	// 	{
+	// 		/** 通过叉积找到与旋转方向垂直的向量 */
+	// 		Vector3 vAxis = _view - _position;
+	// 		vAxis = vAxis.crossProduct(_upVector);
+	// 		vAxis = vAxis.normalize();
+			
+	// 		///旋转
+	// 		rotateView( -1.0f - lastRotX, vAxis.x, vAxis.y, vAxis.z);
+	// 	}
+	// }
+	// /** 否则就旋转angleZ度 */
+	// else 
+	// {	
+	// 	/** 找到与旋转方向垂直向量 */
+	// 	Vector3 vAxis = _view - _position;
+	// 	vAxis = vAxis.crossProduct(_upVector);
+	// 	vAxis = vAxis.normalize();
+	
+	// 	///旋转
+	// 	rotateView(angleZ, vAxis.x, vAxis.y, vAxis.z);
+	// }
+
+	// /** 总是左右旋转摄像机 */
+	// rotateView(angleY, 0, 1, 0);
 }
 
 

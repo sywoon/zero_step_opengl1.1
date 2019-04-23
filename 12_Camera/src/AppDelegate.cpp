@@ -40,13 +40,20 @@ void CApplication::Destroy()
 AppDelegate::AppDelegate()
 	: CApplication()
 {
-	m_Fps = 0;
+	_fps = 0;
+	_rot = 0.0f;
 }
 
 
 bool AppDelegate::LoadTexture()
 {
-	if(!m_Texture.LoadTexture("res/image.bmp"))
+	if(!_texture.LoadTexture("res/image.bmp"))
+	{
+		Log("装载位图文件失败！");
+		return false;
+	}
+
+	if(!_texture2.LoadTexture("res/bitmap.bmp"))
 	{
 		Log("装载位图文件失败！");
 		return false;
@@ -87,7 +94,7 @@ bool AppDelegate::Init()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	ResizeDraw(true);
 
-	if(!m_Font.InitFont())
+	if(!_font.InitFont())
 	{
 		Log("初始化字体失败!");
 	}
@@ -97,7 +104,7 @@ bool AppDelegate::Init()
 		Log("载入纹理失败!");
 	}
 	
-	m_Camera.setCamera(0.0f,1.5f, 6.0f, 0.0f, 1.5f, 0.0f,0.0f, 1.0f, 0.0f);
+	_camera.setCamera(0.0f,1.5f, 6.0f, 0.0f, 1.5f, 0.0f,0.0f, 1.0f, 0.0f);
 
 	SetLight();
 
@@ -106,36 +113,40 @@ bool AppDelegate::Init()
 
 void AppDelegate::UnInit()
 {
-	m_Texture.FreeImage();              /** 释放纹理图像占用的内存 */
-	glDeleteTextures(1, &m_Texture.getID()); /**< 删除纹理对象 */
+	_texture.FreeImage();
+	glDeleteTextures(1, &_texture.getID()); 
+
+	_texture2.FreeImage();
+	glDeleteTextures(1, &_texture2.getID()); 
 }
 
 void AppDelegate::UpdateCamera()
 {
-	m_Camera.setViewByMouse();
+	_camera.setViewByMouse();
 	
 	if(IsPressed(VK_SHIFT))                      /**< 按下SHIFT键时加速 */
 	{
-		m_Camera.setSpeed(0.6f);
+		_camera.setSpeed(0.6f);
 	} else {
-		m_Camera.setSpeed(0.2f);
+		_camera.setSpeed(0.2f);
 	}
 
 	if(IsPressed(VK_UP) || IsPressed('W'))   /**< 向上方向键或'W'键按下 */
-		m_Camera.moveCamera(m_Camera.getSpeed());          /**< 移动摄像机 */
+		_camera.moveCamera(_camera.getSpeed());          /**< 移动摄像机 */
 
 	if(IsPressed(VK_DOWN) || IsPressed('S')) /**< 向下方向键或'S'键按下 */
-		m_Camera.moveCamera(-m_Camera.getSpeed());         /**< 移动摄像机 */
+		_camera.moveCamera(-_camera.getSpeed());         /**< 移动摄像机 */
 
 	if(IsPressed(VK_LEFT) || IsPressed('A')) /**< 向左方向键或'A'键按下 */
-		m_Camera.yawCamera(-m_Camera.getSpeed());          /**< 移动摄像机 */
+		_camera.yawCamera(-_camera.getSpeed());          /**< 移动摄像机 */
 
 	if(IsPressed(VK_RIGHT) || IsPressed('D')) /**< 向右方向键或'D'键按下 */
-		m_Camera.yawCamera(m_Camera.getSpeed());            /**< 移动摄像机 */
+		_camera.yawCamera(_camera.getSpeed());            /**< 移动摄像机 */
 }
 
 void AppDelegate::Update(DWORD milliseconds)
 {
+	_rot += milliseconds / 20.0;
 	UpdateCamera();
 }
 
@@ -153,7 +164,7 @@ void AppDelegate::CaculateFrameRate()
     {
 		
 	    lastTime = currentTime;                   /**< 保存当前时间 */
-		m_Fps = framesPerSecond;                  /**< 当前帧数传给m_Fps */
+		_fps = framesPerSecond;                  /**< 当前帧数传给m_Fps */
         framesPerSecond = 0;                      /**< 将帧数置零 */                    
     }
 }
@@ -165,13 +176,13 @@ void  AppDelegate::PrintText()
 	glPushAttrib(GL_CURRENT_BIT);                   /**< 保存现有颜色属性信息 */
 	glColor3f(0.0f,1.0f,0.0f);                      /**< 设置文字颜色 */
 	sprintf(string,"当前位置:X=%3.1f  Y=%3.1f Speed =%3.1f ",   
-		     m_Camera.getView().x,-m_Camera.getView().z ,m_Camera.getSpeed()); /**< 字符串赋值 */
-	m_Font.PrintText(string,-5.0f,3.5f);
+		     _camera.getView().x,-_camera.getView().z ,_camera.getSpeed()); /**< 字符串赋值 */
+	_font.PrintText(string,-5.0f,3.5f);
 
 	/** 输出帧速 */
 	CaculateFrameRate();                               /**< 计算帧速 */
-    sprintf(string,"FPS:%3.0f",m_Fps);                 /**< 字符串赋值 */
-	m_Font.PrintText(string, -5.0f,3.0f);              /**< 输出字符串 */
+    sprintf(string,"FPS:%3.0f",_fps);                 /**< 字符串赋值 */
+	_font.PrintText(string, -5.0f,3.0f);              /**< 输出字符串 */
 	glPopAttrib();
 		
 }
@@ -238,7 +249,7 @@ void AppDelegate::DrawSphere()
     
 	/** 绘制过程 */
 	glPushMatrix();
-    glTranslatef(-5.0f,2.0f,-10.0f);
+    glTranslatef(-5.0f, 2.0f,-10.0f);
     GLUquadricObj * sphere = gluNewQuadric();
     gluQuadricOrientation(sphere, GLU_OUTSIDE);
 	gluQuadricNormals(sphere,GLU_SMOOTH);
@@ -249,6 +260,22 @@ void AppDelegate::DrawSphere()
 	/** 恢复状态 */
 	if(tp)
 	   glEnable(GL_TEXTURE_2D);
+
+
+	glBindTexture(GL_TEXTURE_2D, _texture2.getID());
+
+	// 绘制第二个
+	glPushMatrix();
+	    glTranslatef(0.0f, 2.0f, -10.0f);
+	    glRotatef(_rot, 0.0f, 1.0f, 1.0f);
+
+	    GLUquadricObj * sphere2 = gluNewQuadric();
+	    gluQuadricOrientation(sphere2, GLU_OUTSIDE);
+		gluQuadricNormals(sphere2,GLU_SMOOTH);
+		gluQuadricTexture(sphere2, GL_TRUE);  //必须 否则不显示纹理
+		gluSphere(sphere2, 2.0, 50, 50);
+		gluDeleteQuadric(sphere2);
+    glPopMatrix();
 	
 }
 
@@ -266,7 +293,7 @@ void AppDelegate::DrawBox()
 	glScalef(2.0f,2.0f,2.0f);
 	
 	/** 选择纹理 */
-	glBindTexture(GL_TEXTURE_2D, m_Texture.getID());
+	glBindTexture(GL_TEXTURE_2D, _texture.getID());
 	
 	/** 开始绘制四边形 */
 	glBegin(GL_QUADS);												
@@ -322,7 +349,7 @@ void AppDelegate::Draw()
 	glLoadIdentity();	
 	
 	/** 放置摄像机 */	
-	m_Camera.setLook();
+	_camera.setLook();
 	
 	/** 绘制过程 */
 	DrawGrid();

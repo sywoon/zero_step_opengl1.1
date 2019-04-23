@@ -31,8 +31,10 @@ private:
 	AppDelegate();
 
 private:
-	CBMPLoader m_Texture;                     /**< 位图载入类 */
-	GLFont     m_Font;                        /**< 字体类 */
-	Camera     m_Camera;                      /**< 摄像机类 */     
-  	float      m_Fps;                         /**< 帧速 */
+	CBMPLoader _texture;
+	CBMPLoader _texture2;
+	GLFont     _font;                        /**< 字体类 */
+	Camera     _camera;                      /**< 摄像机类 */     
+  	float      _fps;                         /**< 帧速 */
+  	float      _rot;
 };

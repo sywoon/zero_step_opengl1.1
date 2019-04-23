@@ -42,8 +42,12 @@ public:
 	void setLook();
 
 private:
+	void resetView();
+
+private:
 	Vector3        _position;      /**< 位置 */
 	Vector3        _view;          /**< 朝向 */
+	Vector3        _viewOrigin;    /**< 初始朝向 */
 	Vector3        _upVector;      /**< 向上向量 */
 	float          _speed;         /**< 速度 */
 

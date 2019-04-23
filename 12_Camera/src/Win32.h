@@ -3,11 +3,13 @@
 #include <windows.h>
 #include <gl.h>
 #include <glu.h>
+#include "Mouse.h"
 
-class Keys
+
+class CKeys
 {
 public:
-	Keys();
+	CKeys();
 
 	void Clear();
 	bool IsPressed(unsigned int key);
@@ -37,9 +39,14 @@ public:
 	void ResizeDraw(bool enable) { _resizeDraw = enable; };
 	bool IsPressed(unsigned int key);
 
+	int GetWidth();
+	int GetHeight();
+
 	bool Init();
 	void UnInit();
 	void Run();
+
+	CMouse& GetMouse() { return _mouse; }
 
 	LRESULT WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -56,8 +63,6 @@ protected:
 
 private:
 	bool ChangeScreenSetting();
-	int GetWidth();
-	int GetHeight();
 
 	bool InitOpenGL(HWND hWnd, HGLRC& hRC);
 	void ReshapeGL();
@@ -68,7 +73,8 @@ private:
 	void TerminateApplication();
 
 protected:
-	Keys _keys;
+	CKeys _keys;
+	CMouse _mouse;
 
 
 private:

@@ -5,6 +5,7 @@
 #include "Log.h"
 
 
+class CMouse;
 class CApplication
 {
 public:
@@ -14,7 +15,6 @@ public:
 
 
 public:
-	CWin32* GetWin32() { return &_win32; }
 	virtual void Run();
 
 	void ResizeDraw(bool enable);
@@ -24,6 +24,10 @@ public:
 	virtual void UnInit() = 0;
 	virtual void Update(DWORD milliseconds) = 0;
 	virtual void Draw() = 0;
+
+	CWin32& GetWin32() { return _win32; }
+	CMouse& GetMouse() { return _win32.GetMouse(); }
+
 
 protected:
 	CApplication() {}
