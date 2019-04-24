@@ -109,10 +109,16 @@ extern "C" {
 #define GL_CULL_VERTEX_EYE_POSITION_EXT     0x81AB
 #define GL_CULL_VERTEX_OBJECT_POSITION_EXT  0x81AC
 
+
+
+
+
+
 /* ARB_multitexture */
 #define GL_ACTIVE_TEXTURE_ARB               0x84E0
 #define GL_CLIENT_ACTIVE_TEXTURE_ARB        0x84E1
 #define GL_MAX_TEXTURE_UNITS_ARB            0x84E2
+#define GL_SUBTRACT_ARB                     0x84E7
 #define GL_TEXTURE0_ARB                     0x84C0
 #define GL_TEXTURE1_ARB                     0x84C1
 #define GL_TEXTURE2_ARB                     0x84C2
@@ -176,6 +182,31 @@ extern "C" {
 #define GL_OPERAND0_ALPHA_EXT               0x8598
 #define GL_OPERAND1_ALPHA_EXT               0x8599
 #define GL_OPERAND2_ALPHA_EXT               0x859A
+
+// same as up but _ARB
+#define GL_SUBTRACT_ARB                     0x84E7
+#define GL_COMBINE_ARB                      0x8570
+#define GL_COMBINE_RGB_ARB                  0x8571
+#define GL_COMBINE_ALPHA_ARB                0x8572
+#define GL_RGB_SCALE_ARB                    0x8573
+#define GL_ADD_SIGNED_ARB                   0x8574
+#define GL_INTERPOLATE_ARB                  0x8575
+#define GL_CONSTANT_ARB                     0x8576
+#define GL_PRIMARY_COLOR_ARB                0x8577
+#define GL_PREVIOUS_ARB                     0x8578
+#define GL_SOURCE0_RGB_ARB                  0x8580
+#define GL_SOURCE1_RGB_ARB                  0x8581
+#define GL_SOURCE2_RGB_ARB                  0x8582
+#define GL_SOURCE0_ALPHA_ARB                0x8588
+#define GL_SOURCE1_ALPHA_ARB                0x8589
+#define GL_SOURCE2_ALPHA_ARB                0x858A
+#define GL_OPERAND0_RGB_ARB                 0x8590
+#define GL_OPERAND1_RGB_ARB                 0x8591
+#define GL_OPERAND2_RGB_ARB                 0x8592
+#define GL_OPERAND0_ALPHA_ARB               0x8598
+#define GL_OPERAND1_ALPHA_ARB               0x8599
+#define GL_OPERAND2_ALPHA_ARB               0x859A
+
 
 /* NV_texture_env_combine4 */
 #define GL_COMBINE4_NV                      0x8503

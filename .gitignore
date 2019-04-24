@@ -2,4 +2,8 @@
 *.obj
 *.log
 *.swp
+.vs
+
+Debug/
+
 
