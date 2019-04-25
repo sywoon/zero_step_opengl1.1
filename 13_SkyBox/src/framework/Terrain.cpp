@@ -92,14 +92,14 @@ int Terrain::getHeight(int x, int y)
 /** 获得地面高度 */
 float Terrain::getAveHeight(float x, float z)
 {
-	float CameraX, CameraZ;
+	float cameraX, cameraZ;
 
-	CameraX = x / _nCellWidth;
-	CameraZ = z / _nCellWidth;
+	cameraX = x / _nCellWidth;
+	cameraZ = z / _nCellWidth;
 
 	/** 计算高程坐标(Col0, Row0)，(Col1, Row1) */
-	int col0 = int(CameraX);
-	int row0 = int(CameraZ);
+	int col0 = int(cameraX);
+	int row0 = int(cameraZ);
 	unsigned int col1 = col0 + 1;
 	unsigned int row1 = row0 + 1;
 
@@ -114,8 +114,8 @@ float Terrain::getAveHeight(float x, float z)
 	float h10 = (float)(_pHeightMap[col0*_nCellWidth + row1*_nCellWidth*_nWidth]);
 
 	/** 计算机摄像机相对于单元格的位置 */
-	float tx = CameraX - int(CameraX);
-	float ty = CameraZ - int(CameraZ);
+	float tx = cameraX - int(cameraX);
+	float ty = cameraZ - int(cameraZ);
 
 	/** 进行双线性插值得到地面高度 */
 	float txty = tx * ty;

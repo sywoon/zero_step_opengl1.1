@@ -23,7 +23,7 @@ bool SkyBox::init()
 {
 	char filename[128]; 
 	char *bmpName[] = {"back", "front", "top", "left", "right"};
-	for(int i=0; i< 5; i++)
+	for(int i=0; i<5; i++)
 	{
 		sprintf(filename,"res/%s", bmpName[i]);
 		strcat(filename,".bmp");
@@ -32,6 +32,9 @@ bool SkyBox::init()
 			Log("装载位图文件失败!");
 			return false;
 		}
+
+		_texture[i].setFilter(GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR);
+		_texture[i].setWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 	}
 	return true;
 }
@@ -49,7 +52,7 @@ void SkyBox::render()
 	glPushMatrix();
 
 	// 天空盒跟随镜头移动  避免创建超大盒体问题
-	Camera& camera = Application::getInstance()->getCamera();
+	Camera& camera = g_app.getCamera();
 	Vector3 cameraPos = camera.getPosition();
 	glTranslatef(cameraPos.x, cameraPos.y, cameraPos.z);
 
@@ -90,7 +93,7 @@ void SkyBox::render()
 	// 绘制左面
 	glBindTexture(GL_TEXTURE_2D, _texture[3].getID());
 	glBegin(GL_QUADS);		
-		glTexCoord2f(1.0f, 1.0f);  glVertex3f(-_width,  _height,	-_length);		
+		glTexCoord2f(1.0f, 1.0f);  glVertex3f(-_width,  _height, -_length);		
 		glTexCoord2f(0.0f, 1.0f);  glVertex3f(-_width,  _height,  _length); 
 		glTexCoord2f(0.0f, 0.0f);  glVertex3f(-_width, -_height,  _length);
 		glTexCoord2f(1.0f, 0.0f);  glVertex3f(-_width, -_height, -_length);	

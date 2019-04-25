@@ -104,9 +104,11 @@ bool CTGALoader::loadTexture(const char* fileName)
    
     // 绑定纹理对象
     glBindTexture(GL_TEXTURE_2D, _ID);
+
+	//纹理映射方式
+	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	
     // 控制滤波
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT);
@@ -129,3 +131,17 @@ void CTGALoader::freeTexture()
 		_ID = 0;
     }
 }
+
+void CTGALoader::setFilter(int min, int max)
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, max);
+}
+
+void CTGALoader::setWrap(int s, int t)
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, t);
+}
+
+

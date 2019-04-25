@@ -9,12 +9,12 @@ public:
 	GLFont();
 	virtual ~GLFont();
     
-	bool initFont(const char *fontName = "宋体",int Size = 30);  /**< 初始化字体 */
-	void printText(const char *txtUtf8, float x, float y);    /**< 在位置(x,y)处绘制字符串string */
+	bool initFont(const char *fontName = "宋体",int Size = 30);
+	void printText(const char *txtUtf8, float x, float y);
 	void killGLFont();
 
 protected:
-	HFONT _hFont;     /**< 字体句柄 */
+	HFONT _hFont; 
 };
 
 #endif	// __GLFONT_H__

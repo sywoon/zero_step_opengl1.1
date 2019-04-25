@@ -103,7 +103,7 @@ bool BMPLoader::loadTexture(const char* fileName)
     glBindTexture(GL_TEXTURE_2D, _ID);
 
     //纹理映射方式
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	
 	// 控制滤波
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -127,4 +127,16 @@ void BMPLoader::freeTexture()
 		glDeleteTextures(1, &_ID);
 		_ID = 0;
 	}
+}
+
+void BMPLoader::setFilter(int min, int max)
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, max);
+}
+
+void BMPLoader::setWrap(int s, int t)
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, t);
 }

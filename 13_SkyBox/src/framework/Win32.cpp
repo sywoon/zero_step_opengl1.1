@@ -69,7 +69,7 @@ Win32::Win32()
 		, _resizeDraw(false)
 		, _isVisible(false)
 		, _isLooping(true)
-		, _nWinWidth(600)
+		, _nWinWidth(500)
 		, _nWinHeight(500)
 		, _dwLastTickCount(0)
 {
@@ -338,12 +338,14 @@ void Win32::reshapeGL()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);	
+	
+	float eye = 1.0f * height / 1.1547005383793; //height/2 / tanf(pi/6)
+	gluPerspective(60.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	//视点  目标点  朝向
-	gluLookAt(0.0,5.0,0.0,  0,0,0, 1.0,0.0,0);
+	gluLookAt(0.0,0.0, eye, 0,0,0, 0.0,1.0,0.0);
 }
 
 void Win32::destroyWin(HWND hWnd, HGLRC hRC)									
@@ -468,6 +470,7 @@ LRESULT Win32::windowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			reshapeGL();	//重新设置窗口的大小
 			draw();					//重新绘制
 			::SwapBuffers(_hDC);	//交换前后帧缓存
+			_resizeDraw = false;
 		}
 		break;
 

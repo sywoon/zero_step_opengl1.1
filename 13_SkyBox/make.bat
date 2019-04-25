@@ -13,7 +13,7 @@ set "LIB_PATH=..\..\opengl1.1\lib"
 cd src
 if %USE_CL% == 1 (
 	cl *.cpp /source-charset:utf-8  /wd"4819" /wd"4996" /wd"4018" /D COMPILE_CL /D _USING_V110_SDK71_ /D WIN32 /I "..\..\opengl1.1\include" /I "include" /I "framework" /link /LIBPATH:"%LIB_PATH%" /out:..\main_cl.exe user32.lib gdi32.lib
-	::del *.obj
+	del *.obj
 )
 
 if %USE_CL% == 2 (

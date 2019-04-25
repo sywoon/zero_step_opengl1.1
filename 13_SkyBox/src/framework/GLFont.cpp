@@ -1,4 +1,6 @@
 #include "GLFont.h"
+#include "Camera.h"
+#include "Application.h"
 
 
 GLFont::GLFont()
@@ -60,11 +62,20 @@ void GLFont::printText(const char *txtUtf8, float x, float y)
 	glGetBooleanv(GL_LIGHTING, &lp);
 	glGetBooleanv(GL_TEXTURE_2D, &tp);
 	HDC hDC = ::CreateCompatibleDC(0); /**< 暂存设备场景 */
+
+	// 在摄像机方向前面
+	Camera& camera = g_app.getCamera();
+	Vector3 cameraPos = camera.getPosition();
+	Vector3 cameraView = camera.getView();
+	Vector3 dir = cameraView - cameraPos;
+	dir = dir.normalize();
+	dir = dir * -2;
+
 	
 	/** 保存和设置一些属性 */
 	glLoadIdentity();
 	glPushMatrix();
-	glTranslatef(0,0, -10.0f);
+	glTranslatef(0, 0, -10);
 	glDisable(GL_LIGHTING);     /**< 关闭光照 */
 	glDisable(GL_TEXTURE_2D);   /**< 关闭纹理 */
 	glDisable(GL_DEPTH_TEST);   /**< 关闭深度测试 */ 
@@ -75,7 +86,7 @@ void GLFont::printText(const char *txtUtf8, float x, float y)
 	::GetTextExtentPoint32(hDC, textOut, strlen(textOut), &size);
 	
 	/** 创建与hDC相关单色位图 */
-	hBitmap = CreateBitmap(size.cx, size.cy,1, 1, NULL); 
+	hBitmap = CreateBitmap(size.cx, size.cy, 1, 1, NULL); 
 	
 	/** 选择位图 */      
 	hOldBmp = (HBITMAP)SelectObject(hDC, hBitmap);              
@@ -124,7 +135,9 @@ void GLFont::printText(const char *txtUtf8, float x, float y)
 	glRasterPos2f(x, y);                    /**< 定位 */
 	
 	/** 位图显示 */
-	glBitmap(size.cx, size.cy, 0.0, 0.0, 0.0, 0.0, pBmpBits); 
+	//不是需要真正的.bmp位图或其他图片格式 而是比特数据流
+	//每个比特表示一个像素 1用当前光栅颜色绘制到framebuffer 0不绘制
+	glBitmap(size.cx, size.cy, 0.0, size.cy/2, 0.0, 0.0, pBmpBits);
 	delete[] pBmpBits;                       /**< 删除指针 */
 	SelectObject(hDC, hOldBmp);            /**< 恢复原来位图信息 */
 	DeleteObject(hBitmap);
@@ -148,6 +161,7 @@ void GLFont::killGLFont()
 	if(_hFont)
 	{
 		DeleteObject(_hFont);
+		_hFont = NULL;
 	}	
 }
 

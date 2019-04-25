@@ -34,6 +34,7 @@ AppDelegate::AppDelegate()
 	_fps = 0;
 	_renderMode = true;
 	_sp = false;
+	_rot = 0;
 }
 
 bool AppDelegate::init()
@@ -42,15 +43,24 @@ bool AppDelegate::init()
 	glClearDepth(1.0f);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);	
+	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	initGLExt();
+
 	resizeDraw(true);
 
-	initGLExt();
 
 	if(!_font.initFont())
 	{
 		Log("初始化字体失败!");
+		return false;
+	}
+
+	if (!_texture.loadTexture("res/cloud.bmp"))
+	{
+		Log("装载位图文件失败!");
 		return false;
 	}
 	
@@ -69,18 +79,20 @@ bool AppDelegate::init()
 		return false;
 	}
 
-	_camera.setCamera( 500, 35, 400,  501, 35, 400,  0, 1, 0);
+	_camera.setCamera(0.0, 0.0, 10.0, 0, 0, 0, 0.0, 1.0, 0.0);
+	//_camera.setCamera(500, 35, 400, 501, 35, 400, 0, 1, 0);
 
 	return true;
 }
 
 void AppDelegate::unInit()
 {
+	_texture.freeTexture();
 }
 
 void AppDelegate::updateCamera()
 {
-	_camera.setViewByMouse();
+	//_camera.setViewByMouse();
 	
 	/** 键盘按键响应 */
 	if(isPressed(VK_SHIFT))                        /**< 按下SHIFT键时加速 */
@@ -109,40 +121,42 @@ void AppDelegate::updateCamera()
 	
 
 	/** 设置摄像机高度为 地形高度 + 10 */
-	vNewPos.y = (float)_terrain.getAveHeight(vPos.x,vPos.z ) + 10;
+	vNewPos.y = (float)_terrain.getAveHeight(vPos.x, vPos.z ) + 10;
 
-		/** 得到高度差值 */
-		float temp = vNewPos.y - vPos.y;
+	/** 得到高度差值 */
+	float temp = vNewPos.y - vPos.y;
 
-		/** 更新摄像机方向 */
-		Vector3 vView = _camera.getView();
-		vView.y += temp;
+	/** 更新摄像机方向 */
+	Vector3 vView = _camera.getView();
+	vView.y += temp;
 
-		/** 设置摄像机 */
-		_camera.setCamera(vNewPos.x,  vNewPos.y,  vNewPos.z,
-						   vView.x,	   vView.y,	   vView.z,	 
-						   0, 1, 0);								
+	/** 设置摄像机 */
+	_camera.setCamera(vNewPos.x,  vNewPos.y,  vNewPos.z,
+					   vView.x,	   vView.y,	   vView.z,	 
+					   0, 1, 0);								
 	
 }
 
 void AppDelegate::update(DWORD milliseconds)
 {
-	updateCamera();
+	//updateCamera();
+	_rot += milliseconds / 20.0;
 
 	/** 空格键切换绘制模式 */
-	if(isPressed(VK_SPACE) && !_sp)
+	if(isPressed(VK_SPACE))
 	{
-		_sp = true;
-		_renderMode = !_renderMode;
-		if(_renderMode)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (_sp)
+		{
+			_sp = false;
+		} else {
+			_sp = true;
+			_renderMode = !_renderMode;
+			if(_renderMode)
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			else
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
 	}
-			
-
-	if(!isPressed(VK_SPACE))
-		_sp = false;
 }
 
 
@@ -161,45 +175,121 @@ void AppDelegate::caculateFrameRate()
 		_fps = framesPerSecond;                  /**< 当前帧数传给m_Fps */
         framesPerSecond = 0;                      /**< 将帧数置零 */                    
     }
-
 }
 
 /** 输出文字信息 */
 void  AppDelegate::printText()
 {
-	char string[128];                               /**< 用于保存输出字符串 */
-	glPushAttrib(GL_CURRENT_BIT);                   /**< 保存现有颜色属性信息 */
-	glPushMatrix(); 	
-	glTranslatef(0.0f, 0.0f, -10.0f); 
+	char text[128];                               /**< 用于保存输出字符串 */
+	glPushAttrib(GL_CURRENT_BIT);                 /**< 保存现有颜色属性信息 */
 
-		glColor3f(0.0f,1.0f,1.0f);                      /**< 设置文字颜色 */
-		sprintf(string,"当前位置:X=%3.1f  Y=%3.1f Speed =%3.1f ",   
-			_camera.getPosition().x,_camera.getPosition().z ,_camera.getSpeed()); /**< 字符串赋值 */
-		_font.printText(string,-5.0f,3.5f);
+	glColor3f(0.0f, 1.0f, 1.0f);                  /**< 设置文字颜色 */
+	sprintf(text,"当前位置:X=%3.1f  Y=%3.1f Speed =%3.1f ",   
+				_camera.getPosition().x,
+				_camera.getPosition().z, 
+				_camera.getSpeed());
+	_font.printText(text, -5.7f, 0.0f);
 
-		/** 输出帧速 */
-	    caculateFrameRate();                               /**< 计算帧速 */
-	    sprintf(string,"FPS:%d",(int)_fps);               /**< 字符串赋值 */
-		_font.printText(string, -5.0f,3.0f);              /**< 输出字符串 */
+	/** 输出帧速 */
+    caculateFrameRate();                            /**< 计算帧速 */
+    sprintf(text, "FPS:%d", (int)_fps);             /**< 字符串赋值 */
+	_font.printText(text, -0.0f, 5.0f);             /**< 输出字符串 */
+
+	_font.printText("O", 0.0f, 0.0f);
 	
-	glPopMatrix();	
 	glPopAttrib();
 }
+
+void AppDelegate::drawCoordinate()
+{
+	/** 获得场景中一些状态  */
+	GLboolean  lp, tp;
+	glGetBooleanv(GL_LIGHTING, &lp);
+	glGetBooleanv(GL_TEXTURE_2D, &tp);
+
+	/** 关闭纹理和光照 */
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_LIGHTING);
+
+	glPushAttrib(GL_CURRENT_BIT);   /**< 保存当前属性 */
+	glPushMatrix();                 /**< 压入堆栈 */
+	glTranslatef(0.0f, 0.0f, 0.0f);
+	glColor3f(0.0f, 0.0f, 1.0f);    /**< 设置颜色 */
+
+		glBegin(GL_LINES);
+
+			/** Y轴方向 */
+			glVertex3f(0, 5, 0);
+			glVertex3f(0, -5, 0);
+
+			/** X轴方向 */
+			glVertex3f(5, 0, 0);
+			glVertex3f(-5, 0, 0);
+
+		glEnd();
+
+	glPopMatrix();
+	glPopAttrib();
+
+	/** 恢复场景状态 */
+	if (tp)
+		glEnable(GL_TEXTURE_2D);
+	if (lp)
+		glEnable(GL_LIGHTING);
+}
+
+
+/** 绘制球体 */
+void AppDelegate::drawSphere()
+{
+	/** 设置材质属性 */
+	GLfloat mat_ambient[] = { 0.9f, 0.5f, 0.8f, 1.0f };
+	GLfloat mat_diffuse[] = { 0.9f, 0.5f, 0.8f, 1.0f };
+	GLfloat mat_shininess[] = { 100.0f };
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, _texture.getID());
+
+	glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 0.0f);
+		glRotatef(_rot, 0.0f, 1.0f, 1.0f);
+
+		GLUquadricObj * sphere = gluNewQuadric();
+		gluQuadricOrientation(sphere, GLU_OUTSIDE);
+		gluQuadricNormals(sphere, GLU_SMOOTH);
+		gluQuadricTexture(sphere, GL_TRUE);  //必须 否则不显示纹理
+		gluSphere(sphere, 2.5, 50, 50);
+		gluDeleteQuadric(sphere);
+	glPopMatrix();
+}
+
 
 void AppDelegate::draw()
 {
 	//用户自定义的绘制过程
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);			
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearDepth(1.0f);
+	glClearColor(0.2f, 0.2f, 0.0f, 0.5f);
 	glLoadIdentity();
+
+	//为什么还需要  不是状态机吗？ 
+	//gluLookAt(0.0, 0.0, 10.0, 0, 0, 0, 0.0, 1.0, 0.0);
 	
 	/** 放置摄像机 */	
-	_camera.setLook();
+	//_camera.setLook();
 
 	/** 绘制天空 */
-	_skyBox.render();
+	//_skyBox.render();
 	
 	/** 渲染地形 */
-	_terrain.render();
+	//_terrain.render();
+
+	drawSphere();
+
+	drawCoordinate();
 	
 	/** 输出屏幕信息 */ 
 	printText();

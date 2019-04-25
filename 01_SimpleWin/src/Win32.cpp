@@ -5,6 +5,10 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
+
+
+#define M_PI       3.14159265358979323846   // pi
 
 
 
@@ -63,7 +67,7 @@ CWin32::CWin32()
 		, _resizeDraw(false)
 		, _isVisible(false)
 		, _isLooping(true)
-		, _nWinWidth(600)
+		, _nWinWidth(500)
 		, _nWinHeight(500)
 		, _dwLastTickCount(0)
 {
@@ -333,7 +337,14 @@ void CWin32::ReshapeGL()
 	glLoadIdentity();
 
 	//视点  目标点  朝向
-	gluLookAt(0.0,5.0,0.0,  0,0,0, 1.0,0.0,0);
+	//gluLookAt(0.0,5.0,0.0,  0,0,0, 1.0,0.0,0);
+	//
+	float eye = 10.0f;
+	float logicH = eye * tanf(45.0/2*M_PI/180.0) * 2;
+	Log("logic height %f", logicH);
+
+	//视点  目标点  朝向
+	gluLookAt(0.0,0.0,eye, 0,0,0, 0.0,1.0,0.0);
 }
 
 void CWin32::DestroyWin(HWND hWnd, HGLRC hRC)									
@@ -441,8 +452,9 @@ LRESULT CWin32::WindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (_resizeDraw)	//如果需要重绘
 		{
 			ReshapeGL();	//重新设置窗口的大小
-			Draw();					//重新绘制
-			SwapBuffers(_hDC);	//交换前后帧缓存
+			//Draw();					//重新绘制
+			//SwapBuffers(_hDC);	//交换前后帧缓存
+			_resizeDraw = false;
 		}
 		break;
 

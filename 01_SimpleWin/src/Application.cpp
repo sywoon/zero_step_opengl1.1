@@ -46,11 +46,12 @@ void CApplication::Update(DWORD milliseconds)
 void CApplication::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	glTranslatef(0.0f, 0.0f, -6.0f);
+	//glLoadIdentity();
+	//glTranslatef(0.0f, 0.0f, -6.0f);
+	
+	glPushMatrix();
 	glRotatef(_fAngle, 0.0f, 1.0f, 0.0f);
 	glRotatef(_fAngle * 0.7f, -1.0f, 0.0f, 0.0f);
-
 
 	for (int rot1 = 0; rot1 < 2; rot1++)
 	{
@@ -66,6 +67,8 @@ void CApplication::Draw()
 			glEnd();
 		}
 	}
+	glPopMatrix();
+	
 	glFlush();
 }
 

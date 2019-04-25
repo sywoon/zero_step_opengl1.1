@@ -15,6 +15,8 @@ public:
     bool           loadTexture(const char* fileName); //载入位图并创建纹理
     void           freeTexture();
 
+	void		   setFilter(int min, int max);
+	void		   setWrap(int s, int t);
 
 private:
     bool           loadTGA(const char *file);

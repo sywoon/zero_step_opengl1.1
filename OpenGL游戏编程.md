@@ -567,9 +567,14 @@ glEnable glDisable 控制某个状态
 	or
 	void gluPerspective(GLdouble fovy, aspect, zNear, zFar)
 	  创建一个对称透视视景体
-	  fovy:x-z平面的角度 [0.0, 180.0]
-	  aspect:宽高比
-	  zNear zFar:到视点的距离 总为正
+	  fovy:y方向以度为单位的视场角度 [0.0, 180.0]  一般为40-70间 比较符合人眼范围
+	      值越大 物体最后在屏幕中占比越小 因为能看到的东西更多了
+	  aspect:宽高比  应该和屏幕同比 >变宽 <变窄
+			比如 100x200的长方形 对应100x200的屏幕  理论两者刚好满屏显示
+			宽高比应该为0.5  若为1 则：屏幕中看到的长方形就只占一半
+	  zNear zFar:到视点的距离 总为正  范围外的不被渲染
+	  注意：整个功能和世界坐标没任何关系  得到的投影矩阵是给视点用的
+	        由gluLookAt定义(位置 目标 正方向 )
 	  
 	都基于视点在原点 指向z负轴
 
@@ -582,6 +587,72 @@ glEnable glDisable 控制某个状态
 	特殊的正视投影 near far默认为-1.0 1.0  所有物体z坐标都是0.0
 
   得到一个矩阵 右乘模型矩阵 得到投影位置
+
+  注意：
+     1. 实际源码中，先设定了投影和视图矩阵，模型矩阵是在渲染时才计算。
+	 2. 投影和视图默认是分开存储的 不在同一个栈中
+		投影矩阵：
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);
+
+		视图矩阵：
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(0.0,0.0,eye, 0,0,0, 0.0,1.0,0.0);
+
+		渲染时 应该是 matrixPerspect * matrixView * matrixModel 俗称MVP
+	 3. 注意glLoadIdentity的使用 不是渲染时都要调用 会导致丢失之前的信息
+	    而应该使用 glPushMatrix和glPopMatrix
+		比如：
+		Draw()
+		{
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			方式1： 错误  显示异常
+			glLoadIdentity(); //注意 由于当前是GL_MODELVIEW 导致之前的gluLookAt白调用了
+			方式2：错误  显示异常
+			glPushMatrix();  //将view矩阵复制一份
+			glLoadIdentity() //却被重置了
+
+			方式3：错误  在不动view的情况下 显示正常
+			glPushMatrix();
+			glLoadIdentity() 
+			glTranslatef(0.0f, 0.0f, -eye); 相当于做了一次view映射
+
+			方式4：正确
+			glPushMatrix();  只要复制一份  不用做任何其他操作
+
+			glBegin(GL_TRIANGLES);								
+				glColor3f(1.f, 0.f, 0.f);	glVertex3f( 0.0f,  4.0f, 0.0f);
+				glColor3f(0.f, 1.f, 0.f);	glVertex3f(-4.0f, -4.0f, 0.0f);
+				glColor3f(0.f, 0.f, 1.f);	glVertex3f( 4.0f, -4.0f, 0.0f);
+			glEnd();
+
+			glPopMatrix();
+		}
+
+	4. 若按窗口分辨率作为映射目标 相当于2d显示在xy平面 怎么计算eye的距离？
+		//满屏
+		glViewport(0, 0, width, height);
+
+		//设置投影矩阵
+		glMatrixMode(GL_PROJECTION);  //估计默认就有一个初始矩阵 将当前矩阵设置值为投影矩阵
+		glLoadIdentity();  //重置后重新计算矩阵
+		//宽高比和分辨率一致  内部会修改投影矩阵
+		gluPerspective(60.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);	
+
+		//设置视图矩阵
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		//视点  目标点  朝向  
+		//以60度视角 计算视点位置  保证2d渲染在xy平面 且和分辨率1:1换算
+		float eye = 1.0f * height / 1.1547005383793; //height/2 / tanf(pi/6)
+		gluLookAt(0.0,0.0, eye, 0,0,0, 0.0,1.0,0.0);  //设置视图矩阵
+
+	5. cocos3.0版将投影和视图矩阵相乘 存储到投影矩阵中
+	   而视图矩阵设置为单位矩阵   防止3中的类似问题？还是能提高计算(少算一次相乘)？
 ```
 
 * 视口变换
@@ -1207,6 +1278,35 @@ glEnable glDisable 控制某个状态
 		wglUseFontBitmaps or wglUseFontOutlines
   3. 用glCallLists来调用这些列表
 		glCallLists
+```
+
+* 使用的底层技术 [doc](https://docs.microsoft.com/en-us/windows/desktop/opengl/glrasterpos2f)
+```
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);  指定像素存储模式
+  glRasterPos2f(x, y);
+	指定像素操作的光栅位置
+	x y : 指定当前光栅位置的坐标
+	OpenGL在窗口坐标中保持三维位置，被称为光栅位置
+	以亚像素精度维护，用于定位像素和位图写入操作
+	实际坐标为(x,y,z)+w(剪辑坐标) 默认z:0 w:1
+
+	当前光栅位置由三个窗口坐标（X、Y、Z）、剪辑坐标W值、眼睛坐标距离、有效位以及相关的颜色数据和纹理坐标组成。
+
+  //不是需要真正的.bmp位图或其他图片格式 而是比特数据流
+  //每个比特表示一个像素 1用当前光栅颜色绘制到framebuffer 0不绘制
+  glBitmap(size.cx, size.cy, 0.0, 0.0, 0.0, 0.0, pBmpBits); 
+  void WINAPI glBitmap(
+         GLSizei width,
+         GLSizei height,
+         GLfloat xorig,
+         GLfloat yorig,
+         GLfloat xmove,
+         GLfloat ymove,
+   const GLubyte *bitmap
+);
+    xorig yorig 重置图像原点 默认在左下角 比如：-10 -10 将再左下移动10像素
+	       相当于图片在渲染位置 右上移动了10像素
+	xmove ymove 在绘制后 移动光栅位置  估计是为了绘制下一个提供方便
 ```
 
 

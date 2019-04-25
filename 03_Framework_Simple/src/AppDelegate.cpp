@@ -63,7 +63,7 @@ void AppDelegate::UnInit()
 
 void AppDelegate::Update(DWORD milliseconds)
 {
-	_fAngle += (float)(milliseconds) / 15.0f;
+	 _fAngle += (float)(milliseconds) / 15.0f;
 
 	if(_fAngle > 360.0f)
 	{
@@ -76,11 +76,11 @@ void AppDelegate::Draw()
 {
 	//用户自定义的绘制过程
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	//glLoadIdentity();
 	
 	/** 画线 */
 	glPushMatrix();
-		glTranslatef(-1.5f, 1.0f, -6.0f);
+		glTranslatef(-1.5f, 1.0f, -1.0f);
 		glScalef(0.75f, 0.75f, 0.75f);
 		glRotatef(_fAngle, 1.0f, 1.0f, 1.0f);
 		glColor3f(1.0f, 0.0f, 0.0f);							
@@ -93,7 +93,7 @@ void AppDelegate::Draw()
 
 	/** 画圆 */
 	glPushMatrix();	
-		glTranslatef(1.5f, 1.0f, -6.0f);
+		glTranslatef(1.5f, 1.0f, -1.0f);
 		glScalef(0.75f,0.75f,0.75f);
 		glRotatef(_fAngle,1.0f,1.0f,1.0f);
 		glColor3f(1.0f, 0.0f, 1.0f);
@@ -109,7 +109,7 @@ void AppDelegate::Draw()
 
 	/** 画三角形 */
 	glPushMatrix();	
-		glTranslatef(-1.5f, -1.0f, -6.0f);
+		glTranslatef(-1.5f, -1.0f, -1.0f);
 		glScalef(0.75f,0.75f,0.75f);
 		glRotatef(_fAngle,1.0f,1.0f,1.0f);
 		glColor3f(0.0f, 1.0f, 1.0f);							
@@ -122,7 +122,7 @@ void AppDelegate::Draw()
 
     /** 画正方形 */
 	glPushMatrix();
-		glTranslatef(1.5f,-1.0f,-6.0f);
+		glTranslatef(1.5f,-1.0f,-1.0f);
 		glScalef(0.75f,0.75f,0.75f);
 		glRotatef(_fAngle,1.0f,1.0f,1.0f);
 		glColor3f(1.f, 1.f, 0.f);
