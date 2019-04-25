@@ -114,25 +114,26 @@ void AppDelegate::updateCamera()
 	if(isPressed(VK_RIGHT) || isPressed('D')) /**< 向右方向键或'D'键按下 */
 		_camera.yawCamera(_camera.getSpeed());            /**< 移动摄像机 */
 
+
 	/** 根据地形高度更新摄像机 */
-	Vector3 vPos = _camera.getPosition();                  /**< 得到当前摄像机位置 */
-    Vector3 vNewPos = vPos; 
-	
+	//Vector3 vPos = _camera.getPosition();                  /**< 得到当前摄像机位置 */
+ //   Vector3 vNewPos = vPos; 
+	//
 
-	/** 设置摄像机高度为 地形高度 + 10 */
-	vNewPos.y = (float)_terrain.getAveHeight(vPos.x, vPos.z) + 10;
+	///** 设置摄像机高度为 地形高度 + 10 */
+	//vNewPos.y = (float)_terrain.getAveHeight(vPos.x, vPos.z) + 10;
 
-	/** 得到高度差值 */
-	float temp = vNewPos.y - vPos.y;
+	///** 得到高度差值 */
+	//float temp = vNewPos.y - vPos.y;
 
-	/** 更新摄像机方向 */
-	Vector3 vView = _camera.getView();
-	vView.y += temp;
+	///** 更新摄像机方向 */
+	//Vector3 vView = _camera.getView();
+	//vView.y += temp;
 
-	/** 设置摄像机 */
-	_camera.setCamera(vNewPos.x,  vNewPos.y,  vNewPos.z,
-					   vView.x,	   vView.y,	   vView.z,	 
-					   0, 1, 0);								
+	///** 设置摄像机 */
+	//_camera.setCamera(vNewPos.x,  vNewPos.y,  vNewPos.z,
+	//				   vView.x,	   vView.y,	   vView.z,	 
+	//				   0, 1, 0);								
 	
 }
 
@@ -284,7 +285,7 @@ void AppDelegate::draw()
 	/** 渲染地形 */
 	//_terrain.render();
 
-	//drawSphere();
+	drawSphere();
 
 	drawCoordinate();
 	
