@@ -8,8 +8,10 @@ public:
 	GLFont();
 	virtual ~GLFont();
     
-	bool InitFont(const char *fontName = "宋体",int Size = 30);  /**< 初始化字体 */
-	void PrintText(const char *txtUtf8, float x, float y);    /**< 在位置(x,y)处绘制字符串string */
+	bool InitFont(int Size = 20, const char *fontName = "宋体");
+
+	//align 0:左对齐  1:居中  2:右对齐
+	void PrintText(const char *txtUtf8, float x, float y, int alignW=0, int alignH=0);
 	void KillGLFont();
 
 protected:

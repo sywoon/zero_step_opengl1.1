@@ -13,7 +13,7 @@ GLFont::~GLFont()
 	KillGLFont(); 
 }
 
-bool GLFont::InitFont(const char *fontName, int size)
+bool GLFont::InitFont(int size, const char *fontName)
 {
    _hFont = CreateFont(size,					/**< 字体高度 */
 						0,						/**< 字体宽度 */
@@ -38,13 +38,13 @@ bool GLFont::InitFont(const char *fontName, int size)
 
 
 /** 在指定位置输出字符串 */
-void GLFont::PrintText(const char *txtUtf8, float x, float y)
+void GLFont::PrintText(const char *txtUtf8, float x, float y, int alignW, int alignH)
 {
 	const char* textOut = NULL;
+	char* pAnsi = NULL;
 #ifdef COMPILE_CL
 	textOut = txtUtf8;
 #else
-	char* pAnsi = NULL;
 	if (utf82ansi(txtUtf8, &pAnsi))
 	{
 		textOut = pAnsi;
@@ -65,9 +65,9 @@ void GLFont::PrintText(const char *txtUtf8, float x, float y)
 	HDC hDC = ::CreateCompatibleDC(0); /**< 暂存设备场景 */
 	
 	/** 保存和设置一些属性 */
-	glLoadIdentity();
+	//glLoadIdentity();
 	glPushMatrix();
-	glTranslatef(0,0, -10.0f);
+	//glTranslatef(0, 0, -10);
 	glDisable(GL_LIGHTING);     /**< 关闭光照 */
 	glDisable(GL_TEXTURE_2D);   /**< 关闭纹理 */
 	glDisable(GL_DEPTH_TEST);   /**< 关闭深度测试 */ 
@@ -126,8 +126,48 @@ void GLFont::PrintText(const char *txtUtf8, float x, float y)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); /**< 指定像素存储模式 */
 	glRasterPos2f(x, y);                    /**< 定位 */
 	
+	
+	//0:左对齐  1 : 居中  2 : 右对齐
+	GLfloat xorig = 0.0f;
+	GLfloat yorig = 0.0f;
+	{
+		switch (alignW)
+		{
+		case 0:
+			xorig = 0.0f;
+			break;
+		case 1:
+			xorig = bm.bmWidth / 2.0;
+			break;
+		case 2:
+			xorig = bm.bmWidth;
+			break;
+		default:
+			break;
+		}
+
+		switch (alignH)
+		{
+		case 0:
+			yorig = 0.0f;
+			break;
+		case 1:
+			yorig = bm.bmHeight / 2.0;
+			break;
+		case 2:
+			yorig = bm.bmHeight;
+			break;
+		default:
+			break;
+		}
+	}
+
 	/** 位图显示 */
-	glBitmap(size.cx, size.cy, 0.0, 0.0, 0.0, 0.0, pBmpBits); 
+	//不是需要真正的.bmp位图或其他图片格式 而是比特数据流
+	//每个比特表示一个像素 1用当前光栅颜色绘制到framebuffer 0不绘制
+	glBitmap(size.cx, size.cy, xorig, yorig, 0.0, 0.0, pBmpBits);
+	//Log("[%ld,%ld], [%d,%d] [%f,%f]", bm.bmWidth, bm.bmHeight, size.cx, size.cy, xorig, yorig);
+
 	delete[] pBmpBits;                       /**< 删除指针 */
 	SelectObject(hDC, hOldBmp);            /**< 恢复原来位图信息 */
 	DeleteObject(hBitmap);

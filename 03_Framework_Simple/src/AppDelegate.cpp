@@ -53,6 +53,8 @@ bool AppDelegate::Init()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	ResizeDraw(true);
 
+	_font.InitFont();
+
 	return true;
 }
 

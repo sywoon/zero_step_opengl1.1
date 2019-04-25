@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "Win32.h"
 #include "Log.h"
+#include "GLFont.h"
 
 
 class CMouse;
@@ -33,7 +34,7 @@ protected:
 	CApplication() {}
 	virtual ~CApplication() {}
 	
-	
-private:
+protected:
 	CWin32 _win32;
+	GLFont _font;
 };
