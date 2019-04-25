@@ -79,7 +79,8 @@ bool AppDelegate::init()
 		return false;
 	}
 
-	//_camera.setCamera(500, 35, 400, 501, 35, 400, 0, 1, 0);
+	_camera.setCamera(500,35,400, 501,35,400, 0,1,0);
+	_camera.setSpeed(5.0f);
 
 	return true;
 }
@@ -96,12 +97,17 @@ void AppDelegate::updateCamera()
 	/** 键盘按键响应 */
 	if(isPressed(VK_SHIFT))                        /**< 按下SHIFT键时加速 */
 	{
-		_camera.setSpeed(0.2f);
+		_camera.setSpeed(15.0f);
 	}
 	if(!isPressed(VK_SHIFT))
 	{
-		_camera.setSpeed(0.1f);
+		_camera.setSpeed(5.0f);
 	}
+
+	Vector3 vecPosOld = _camera.getPosition();
+	Vector3 vecViewOld = _camera.getView();
+	Vector3 vecUpOld = _camera.getUpVector();
+
 	if(isPressed(VK_UP) || isPressed('W'))   /**< 向上方向键或'W'键按下 */
 		_camera.moveCamera(_camera.getSpeed());          /**< 移动摄像机 */
 
@@ -116,9 +122,13 @@ void AppDelegate::updateCamera()
 
 	/** 根据地形高度更新摄像机 */
 	Vector3 vPos = _camera.getPosition();                  /**< 得到当前摄像机位置 */
-    Vector3 vNewPos = vPos; 
-	
+	if (!_terrain.checkPos(vPos.x, vPos.z))
+	{
+		_camera.setCamera(vecPosOld, vecViewOld, vecUpOld);
+		return;
+	}
 
+    Vector3 vNewPos = vPos; 
 	/** 设置摄像机高度为 地形高度 + 10 */
 	vNewPos.y = (float)_terrain.getAveHeight(vPos.x, vPos.z) + 10;
 
@@ -196,7 +206,7 @@ void  AppDelegate::printText()
 	/** 输出帧速 */
     caculateFrameRate();                            /**< 计算帧速 */
     sprintf(text, "FPS:%d", (int)_fps);             /**< 字符串赋值 */
-	_font.printText(text, -0.0f, logicHH, 0, 2);             /**< 输出字符串 */
+	_font.printText(text, -0.0f, logicHH, 0, 2);    /**< 输出字符串 */
 
 	_font.printText("O", 0.0f, 0.0f, 1, 1);
 	
@@ -264,7 +274,7 @@ void AppDelegate::drawSphere()
 		gluQuadricOrientation(sphere, GLU_OUTSIDE);
 		gluQuadricNormals(sphere, GLU_SMOOTH);
 		gluQuadricTexture(sphere, GL_TRUE);  //必须 否则不显示纹理
-		gluSphere(sphere, 2, 50, 50);
+		gluSphere(sphere, 20, 50, 50);
 		gluDeleteQuadric(sphere);
 	glPopMatrix();
 }
@@ -279,12 +289,12 @@ void AppDelegate::draw()
 	_camera.setLook();
 
 	/** 绘制天空 */
-	//_skyBox.render();
+	_skyBox.render();
 	
 	/** 渲染地形 */
-	//_terrain.render();
+	_terrain.render();
 
-	//drawSphere();
+	drawSphere();
 
 	drawCoordinate();
 	

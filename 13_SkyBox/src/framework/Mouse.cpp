@@ -2,6 +2,7 @@
 
 
 Mouse::Mouse() 
+	: _keyStatus(0)
 { 
 }
 

@@ -23,6 +23,8 @@ public:
 		
 	/** 获得地面高度 */
 	float getAveHeight(float x, float z);
+
+	bool checkPos(float x, float z);
 	
 
 private:

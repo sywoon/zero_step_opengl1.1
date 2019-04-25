@@ -351,12 +351,12 @@ void Win32::reshapeGL()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);	
+	gluPerspective(60.0f, (GLfloat)width / (GLfloat)height, 1.0f, 4000.0f);	
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	const int mode = 1;
+	const int mode = 2;
 	float eye = 0.0f;
 	if (mode == 1)
 	{
@@ -368,7 +368,7 @@ void Win32::reshapeGL()
 		_fLogicHeight = logicH;
 		Log("logicSize:[%.02f,%.02f] eye:%f", logicH, logicW, eye);
 	} else if (mode == 2) {
-		eye = 10.0f;
+		eye = 400.0f;
 		const float logicH = eye * tanf(60.0/2*M_PI/180.0) * 2.0;
 		const float logicW = 1.0 * logicH * width / height;
 		
@@ -379,7 +379,6 @@ void Win32::reshapeGL()
 
 	//视点  目标点  朝向
 	gluLookAt(0.0,0.0,eye, 0,0,0, 0.0,1.0,0.0);
-	g_app.getCamera().setCamera(0.0,0.0,eye, 0,0,0, 0.0,1.0,0.0);
 }
 
 void Win32::destroyWin(HWND hWnd, HGLRC hRC)									

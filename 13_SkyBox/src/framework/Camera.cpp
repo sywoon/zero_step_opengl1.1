@@ -26,6 +26,19 @@ void Camera::resetView()
 	_view = _viewOrigin;
 }
 
+void Camera::setSpeed(float speed)
+{ 
+	_speed = speed; 
+}
+
+void Camera::setCamera(Vector3& pos, Vector3& view, Vector3& up)
+{
+	_position = pos;
+	_view = view;
+	_viewOrigin = view;
+	_upVector = up;
+}
+
 /** 设置摄像机的位置,朝向和向上向量 */
 void Camera::setCamera( float positionX, float positionY, float positionZ,
 				  		float viewX,     float viewY,     float viewZ,

@@ -1361,6 +1361,10 @@ glEnable glDisable 控制某个状态
   长方体5个表面(地面可以忽略)
   要求顶面图要和4周的图能相连
   适用室内和小的室外
+
+  注意：
+    z的范围要够大  否则天空盒 看不到
+	gluPerspective(60.0f, (GLfloat)width / (GLfloat)height, 1.0f, 4000.0f);	
 ```
 
 

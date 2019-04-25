@@ -127,6 +127,18 @@ float Terrain::getAveHeight(float x, float z)
 	return final_height;
 }
 
+bool Terrain::checkPos(float x, float z)
+{
+	if (x <= 0 || x >= _nWidth)
+		return false;
+
+	if (z <= 0 || z >= _nWidth)
+		return false;
+
+	return true;
+}
+
+
 /** 载入高度图 */
 bool Terrain::loadRawFile(const char* fileName)
 {
