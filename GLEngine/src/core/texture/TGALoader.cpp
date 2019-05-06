@@ -1,5 +1,4 @@
 #include "TGALoader.h"
-#include <stdio.h>
 #include "Log.h"
 
 

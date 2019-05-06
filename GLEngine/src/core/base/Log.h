@@ -1,6 +1,6 @@
 #pragma once
 
-
+#define NULL 0
 #define Log mylog::WriteLog
 
 namespace mylog 

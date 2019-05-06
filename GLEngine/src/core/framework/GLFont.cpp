@@ -1,6 +1,7 @@
 #include "GLFont.h"
 #include "Camera.h"
 #include "Application.h"
+#include "Charset.h"
 
 
 GLFont::GLFont()

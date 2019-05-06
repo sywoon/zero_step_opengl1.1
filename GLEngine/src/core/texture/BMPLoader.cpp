@@ -1,4 +1,5 @@
 #include "BMPLoader.h"
+#include "Log.h"
 
 
 BMPLoader::BMPLoader()

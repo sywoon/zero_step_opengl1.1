@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Base.h"
+#include "Core.h"
 #include "Application.h"
 #include "texture/BMPLoader.h"
 

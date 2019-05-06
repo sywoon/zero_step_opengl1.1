@@ -1,5 +1,6 @@
 #include "Win32.h"
 #include "Application.h"
+#include "Log.h"
 
 
 

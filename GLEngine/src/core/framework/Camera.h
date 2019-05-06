@@ -2,6 +2,7 @@
 #define __CAMERA_H__
 
 #include "Base.h"
+#include "Vector.h"
 
 class Camera
 {

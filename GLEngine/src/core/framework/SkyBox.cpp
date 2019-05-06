@@ -1,5 +1,6 @@
 #include "SkyBox.h"
 #include "Application.h"
+#include "Log.h"
 
 	
 SkyBox::SkyBox()

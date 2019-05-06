@@ -1,5 +1,5 @@
 #include "Terrain.h"
-
+#include "Log.h"
 
 
 const unsigned int MAP_WIDTH = 1024;
