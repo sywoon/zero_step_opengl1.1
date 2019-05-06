@@ -1,8 +1,13 @@
 
-project (core)
+project (Core)
 
 include_directories(
   ../external/opengl1.1/include
+  .
+  base
+  framework
+  include
+  texture
 )
 
 include(base/CMakeLists.txt)
@@ -16,7 +21,7 @@ set(CORE_SRC Core.cpp
     ${CORE_TEXTURE_SRC}
     )
 
-add_library(core ${CORE_SRC})
+add_library(Core ${CORE_SRC})
 
 
 
