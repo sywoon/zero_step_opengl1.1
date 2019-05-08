@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{6b8a7e7a-56f4-4f9d-bf53-5e3baf193769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="framework">
+      <UniqueIdentifier>{71107e0a-32fa-4625-bd32-a8b8e33090eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{fe0963f6-9ca2-4dda-ab54-b5a4e4d093b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="texture">
+      <UniqueIdentifier>{23c13b7a-5b2a-41cc-af2c-b3fb6ede1d28}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\core\base\Charset.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\base\File.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\base\Log.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\base\Vector.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\Camera.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\GLFont.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\Mouse.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\SkyBox.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\Terrain.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\Win32.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\framework\Application.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\texture\BMPLoader.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\texture\TGALoader.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\core\Core.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\core\base\Charset.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\base\File.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\base\Log.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\base\Vector.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\Application.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\Camera.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\GLFont.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\Mouse.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\SkyBox.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\Terrain.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\framework\Win32.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\include\GlobalDef.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\include\Macros.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\include\Base.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\texture\BMPLoader.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\texture\TGALoader.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\core\Core.h" />
+  </ItemGroup>
+</Project>

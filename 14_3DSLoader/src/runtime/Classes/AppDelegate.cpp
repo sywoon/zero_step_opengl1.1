@@ -80,7 +80,7 @@ bool AppDelegate::init()
 	}
 
 	_camera.setCamera(500,35,400, 501,35,400, 0,1,0);
-	_camera.setSpeed(5.0f);
+	_camera.setSpeed(3.0f);
 
 	return true;
 }
@@ -97,11 +97,11 @@ void AppDelegate::updateCamera()
 	/** 键盘按键响应 */
 	if(isPressed(VK_SHIFT))                        /**< 按下SHIFT键时加速 */
 	{
-		_camera.setSpeed(15.0f);
+		_camera.setSpeed(10.0f);
 	}
 	if(!isPressed(VK_SHIFT))
 	{
-		_camera.setSpeed(5.0f);
+		_camera.setSpeed(3.0f);
 	}
 
 	Vector3 vecPosOld = _camera.getPosition();
