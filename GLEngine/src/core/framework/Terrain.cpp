@@ -59,7 +59,7 @@ bool Terrain::init()
 	}
 
 	/** 载入高度文件 */
-	loadRawFile("res/terrain.raw");
+	loadRawFile("../res/terrain.raw");
 
 	/** 载入纹理 */
 	loadTexture();
@@ -189,7 +189,7 @@ void Terrain::setTexCoord(float x,float z)
 /** 载入地面纹理 */
 bool Terrain::loadTexture()
 {
-	const char* fileName[] = {"res/terrain.bmp","res/detail.bmp"};	
+	const char* fileName[] = {"../res/terrain.bmp","../res/detail.bmp"};	
 	for(int i=0; i<2; i++)
 	{
 		if(!_texture[i].loadTexture(fileName[i]))

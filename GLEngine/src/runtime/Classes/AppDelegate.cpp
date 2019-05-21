@@ -58,7 +58,7 @@ bool AppDelegate::init()
 		return false;
 	}
 
-	if (!_texture.loadTexture("res/cloud.bmp"))
+	if (!_texture.loadTexture("../res/cloud.bmp"))
 	{
 		Log("装载位图文件失败!");
 		return false;
@@ -79,7 +79,7 @@ bool AppDelegate::init()
 		return false;
 	}
 
-	_3dsLoader.init("res/model.3ds");
+	_3dsLoader.init("../res/model.3ds");
 
 	_camera.setCamera(500,35,400, 501,35,400, 0,1,0);
 	_camera.setSpeed(3.0f);

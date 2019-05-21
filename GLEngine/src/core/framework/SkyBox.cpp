@@ -26,7 +26,7 @@ bool SkyBox::init()
 	char *bmpName[] = {"back", "front", "top", "left", "right"};
 	for(int i=0; i<5; i++)
 	{
-		sprintf(filename,"res/%s", bmpName[i]);
+		sprintf(filename,"../res/%s", bmpName[i]);
 		strcat(filename,".bmp");
 		if(!_texture[i].loadTexture(filename))
 		{

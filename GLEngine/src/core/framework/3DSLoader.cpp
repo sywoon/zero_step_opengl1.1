@@ -120,7 +120,7 @@ void C3DSLoader::loadTexture(char* filename, GLuint textureArray[], GLuint textu
 		return;
 
 	/** 载入位图 */
-	std::string path = "res/";
+	std::string path = "../res/";
 	path += filename;
 	if (!_bmpTexture.readBitmap(path.c_str()))
 	{
