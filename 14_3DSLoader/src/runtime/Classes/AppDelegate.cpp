@@ -79,6 +79,8 @@ bool AppDelegate::init()
 		return false;
 	}
 
+	_3dsLoader.init("res/model.3ds");
+
 	_camera.setCamera(500,35,400, 501,35,400, 0,1,0);
 	_camera.setSpeed(3.0f);
 
@@ -279,6 +281,16 @@ void AppDelegate::drawSphere()
 	glPopMatrix();
 }
 
+void AppDelegate::show3DS(float x,float z,float scale)
+{
+	glPushMatrix();
+	float y = _terrain.getAveHeight(x,z) ;  /**< 获得此处地形高度 */
+	glTranslatef(x,y,z);
+	glScalef(scale,scale,scale);
+	_3dsLoader.draw();                            /**< 显示3DS模型 */
+	glPopMatrix();
+
+}
 
 void AppDelegate::draw()
 {
@@ -297,6 +309,8 @@ void AppDelegate::draw()
 	drawSphere();
 
 	drawCoordinate();
+
+	show3DS(260,583,20);
 	
 	/** 输出屏幕信息 */ 
 	printText();

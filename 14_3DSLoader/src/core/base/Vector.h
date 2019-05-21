@@ -26,4 +26,20 @@ public:
 	float x, y, z;
 };
 
+
+class Vector2
+{
+public:
+	Vector2(float xx = 0.0,float yy = 0.0) { x = xx; y = yy;  }
+	Vector2(const Vector2& v)
+	{
+		x = v.x;
+		y = v.y;
+	}
+
+public:
+	float x,y;
+};
+
+
 #endif //__VECTOR_H__

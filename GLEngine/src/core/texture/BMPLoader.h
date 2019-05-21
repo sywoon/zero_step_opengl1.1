@@ -19,8 +19,11 @@ public:
 	void		   setFilter(int min, int max);
 	void		   setWrap(int s, int t);
 
-private:
     bool           readBitmap(const char *filename);
+
+	int			   getImgWidth()	{ return _imgWidth; }
+	int			   getImgHeight()	{ return _imgHeight; }
+	unsigned char* getImgData()		{ return _imgData;  }
 
 private:
     GLuint      _ID;           //生成纹理的ID号

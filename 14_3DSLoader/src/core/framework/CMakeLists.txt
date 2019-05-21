@@ -2,6 +2,7 @@
 
 
 set(CORE_FRAMEWORK_SRC
+    framework/3DSLoader.cpp
     framework/Application.cpp
     framework/Camera.cpp
     framework/GLFont.cpp

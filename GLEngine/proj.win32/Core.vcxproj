@@ -24,6 +24,7 @@
     <ClCompile Include="..\src\core\base\Log.cpp" />
     <ClCompile Include="..\src\core\base\Vector.cpp" />
     <ClCompile Include="..\src\core\Core.cpp" />
+    <ClCompile Include="..\src\core\framework\3DSLoader.cpp" />
     <ClCompile Include="..\src\core\framework\Application.cpp" />
     <ClCompile Include="..\src\core\framework\Camera.cpp" />
     <ClCompile Include="..\src\core\framework\GLFont.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\src\core\base\Log.h" />
     <ClInclude Include="..\src\core\base\Vector.h" />
     <ClInclude Include="..\src\core\Core.h" />
+    <ClInclude Include="..\src\core\framework\3DSLoader.h" />
     <ClInclude Include="..\src\core\framework\Application.h" />
     <ClInclude Include="..\src\core\framework\Camera.h" />
     <ClInclude Include="..\src\core\framework\GLFont.h" />

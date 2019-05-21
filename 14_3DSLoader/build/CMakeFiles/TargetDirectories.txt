@@ -1,0 +1,5 @@
+D:/Study/GitHub/zero_step_opengl1.1/14_3DSLoader/build/CMakeFiles/GLEngine.dir
+D:/Study/GitHub/zero_step_opengl1.1/14_3DSLoader/build/CMakeFiles/ALL_BUILD.dir
+D:/Study/GitHub/zero_step_opengl1.1/14_3DSLoader/build/CMakeFiles/ZERO_CHECK.dir
+D:/Study/GitHub/zero_step_opengl1.1/14_3DSLoader/build/core/CMakeFiles/Core.dir
+D:/Study/GitHub/zero_step_opengl1.1/14_3DSLoader/build/core/CMakeFiles/ALL_BUILD.dir

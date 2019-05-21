@@ -55,6 +55,9 @@
       <Filter>texture</Filter>
     </ClCompile>
     <ClCompile Include="..\src\core\Core.cpp" />
+    <ClCompile Include="..\src\core\framework\3DSLoader.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\core\base\Charset.h">
@@ -106,5 +109,8 @@
       <Filter>texture</Filter>
     </ClInclude>
     <ClInclude Include="..\src\core\Core.h" />
+    <ClInclude Include="..\src\core\framework\3DSLoader.h">
+      <Filter>framework</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
