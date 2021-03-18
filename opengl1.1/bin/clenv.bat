@@ -12,14 +12,22 @@ if exist "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\cl.exe" (
     call :vs2013
 )
 
+if exist "D:\ProgramFiles\Microsoft Visual Studio 14.0\VC\bin\cl.exe" (
+    call :vs2015
+)
+
+if exist "D:\ProgramFiles\Microsoft Visual Studio 12.0\VC\bin\cl.exe" (
+    call :vs2013
+)
+
 ::where cl
 goto :eof
 
 
 :vs2013
 echo --vs2013--
-set "VSCOMM=C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7"
-set "VSVC=C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC"
+set "VSCOMM=C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7;D:\ProgramFiles\Microsoft Visual Studio 12.0\Common7"
+set "VSVC=C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC;D:\ProgramFiles\Microsoft Visual Studio 12.0\VC"
 
 set "include=%VSVC%\INCLUDE;%VSVC%\ATLMFC\INCLUDE;%WINSDK%\INCLUDE;%WINKITS%\Include\%KITSVERSION%\ucrt;%include%;"
 set "lib=%VSVC%\LIB;%VSVC%\ATLMFC\LIB;%WINSDK%\LIB;%WINKITS%\Lib\%KITSVERSION%\ucrt\x86;%lib%"
@@ -30,8 +38,8 @@ goto :eof
 
 :vs2015
 echo --vs2015--
-set "VSCOMM=C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7"
-set "VSVC=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC"
+set "VSCOMM=C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7;D:\ProgramFiles\Microsoft Visual Studio 14.0\Common7"
+set "VSVC=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC;D:\ProgramFiles\Microsoft Visual Studio 14.0\VC"
 
 set "include=%VSVC%\INCLUDE;%VSVC%\ATLMFC\INCLUDE;%WINSDK%\INCLUDE;%WINKITS%\Include\%KITSVERSION%\ucrt;%WINKITS%\Include\%KITSVERSION%\um;%include%;"
 set "lib=%VSVC%\LIB;%VSVC%\ATLMFC\LIB;%WINSDK%\LIB;%WINKITS%\Lib\%KITSVERSION%\ucrt\x86;%lib%"

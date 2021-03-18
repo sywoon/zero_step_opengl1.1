@@ -33,6 +33,7 @@ public:
 protected:
 	CApplication() {}
 	virtual ~CApplication() {}
+
 	
 protected:
 	CWin32 _win32;

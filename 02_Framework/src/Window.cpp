@@ -107,6 +107,7 @@ void Window::ReshapeGL()
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	//从原点往z负轴观看
 	gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
