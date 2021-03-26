@@ -108,7 +108,7 @@ void Camera::setViewByMouse()
 
 	// 得到鼠标移动方向
 	float angleY = (float)(lstPos.x - curPos.x)/win32.GetWidth();	// 摄像机左右旋转角度	
-	float angleZ = (float)(lstPos.y - curPos.y)/win32.GetHeight() * 2.0;	
+	float angleX = (float)(lstPos.y - curPos.y)/win32.GetHeight() * 2.0;	
 
 	//resetView();  // 这种方式会导致每次都充值到原点
 	_view = lstView;
@@ -124,7 +124,7 @@ void Camera::setViewByMouse()
 		vAxis = vAxis.normalize();
 
 		///旋转
-		rotateView(angleZ, vAxis.x, vAxis.y, vAxis.z);
+		rotateView(angleX, vAxis.x, vAxis.y, vAxis.z);
 	}
 
 

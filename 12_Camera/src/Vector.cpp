@@ -1,10 +1,11 @@
 #include "Vector.h"
+#include <math.h>
 
 
 // 向量的长度
 inline float Vector3::length()
 {
-	return (float)( x * x + y * y + z * z );
+	return (float)sqrtf( x * x + y * y + z * z );
 }
 
 // 单位化一向量
