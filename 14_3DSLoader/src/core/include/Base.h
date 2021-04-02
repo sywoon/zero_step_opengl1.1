@@ -14,7 +14,7 @@
 
 #include "Macros.h"
 #include "GlobalDef.h"
-
+#include "base/Log.h"
 
 
 

@@ -11,7 +11,7 @@ MSBuild "%~dp0/proj.win32/GLEngine1.1.vcxproj" -property:Configuration=Debug
 
 
 rd /s /q ".\proj.win32\.vs"
-rd /s /q ".\proj.win32\Debug"
+::rd /s /q ".\proj.win32\Debug"
 del ".\proj.win32\GLEngine1.1.VC.db"
 del GLEngine1.1.ilk
 

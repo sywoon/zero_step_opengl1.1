@@ -115,6 +115,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\src\external\opengl1.1\include;$(ProjectDir)..\src\core;$(ProjectDir)..\src\core\include;$(ProjectDir)..\src\core\framework;$(ProjectDir)..\src\core\base;$(ProjectDir)..\src\runtime\Classes</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;4996;4018;4305;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

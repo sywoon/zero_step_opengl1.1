@@ -124,6 +124,7 @@ void C3DSLoader::loadTexture(char* filename, GLuint textureArray[], GLuint textu
 	path += filename;
 	if (!_bmpTexture.readBitmap(path.c_str()))
 	{
+		Log("c3d::loadTexture failed:%s", path.c_str());
 		MessageBox(NULL, "c3d::loadTexture failed!", "error", MB_OK);
 		exit(0);
 	}
