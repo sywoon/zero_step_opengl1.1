@@ -4,6 +4,7 @@
 *.swp
 *.ilk
 .vs
+*.sdf
 
 
 Debug/
