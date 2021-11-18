@@ -2,7 +2,7 @@
 
 set "path=C:\Program Files (x86)\MSBuild\14.0\Bin;%path%"
 
-cd build
+cd proj.win32
 msbuild GLEngine.sln
 cd ..
 
